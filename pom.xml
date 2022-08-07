@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.2</version>
+		<relativePath/>
+	</parent>
+
+	<groupId>com.github.kai9026</groupId>
+	<artifactId>my-simple-bank</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>my-simple-bank</name>
+	<description>Demo project for Spring Boot</description>
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.version>17</java.version>
+		<spring.boot.version>2.7.2</spring.boot.version>
+	</properties>
+
+	<modules>
+		<module>my-bank-domain</module>
+		<module>my-bank-application</module>
+		<module>my-bank-infrastructure</module>
+	</modules>
+
+	<dependencyManagement>
+
+		<dependencies>
+			<dependency>
+				<groupId>com.github.kai9026</groupId>
+				<artifactId>my-bank-infrastructure</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.kai9026</groupId>
+				<artifactId>my-bank-application</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.kai9026</groupId>
+				<artifactId>my-bank-domain</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<configuration>
+						<archive>
+							<manifestEntries>
+								<Implementation-Title>${project.name}</Implementation-Title>
+								<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+							</manifestEntries>
+							<manifestSections>
+								<manifestSection>
+									<name>${project.name}</name>
+									<manifestEntries>
+										<Version>${project.version}</Version>
+									</manifestEntries>
+								</manifestSection>
+							</manifestSections>
+						</archive>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+	</build>
+
+</project>
