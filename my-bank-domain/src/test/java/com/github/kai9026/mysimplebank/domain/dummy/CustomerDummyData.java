@@ -13,7 +13,6 @@ public class CustomerDummyData {
         .streetAddress(dummyData.getStreetAddress(), dummyData.getPostalCode(), dummyData.getCity())
         .emailAddress(dummyData.getEmail())
         .birthDate(dummyData.getBirthDate())
-        .nickName(dummyData.getNickName())
         .password(dummyData.getPassword())
         .build();
   }
@@ -21,16 +20,16 @@ public class CustomerDummyData {
   public enum DummyData {
     VALID_DATA(UUID.randomUUID(), "Joe", "Cocker", "Street Joe", 103, "Detroit",
         "joe@gmx.com", LocalDate.of(1944, 5, 20),
-        "joe54", "Dt8c$1245as"),
+        "Dt8c$1245as"),
     OTHER_VALID_DATA(UUID.randomUUID(), "Mick", "Lewis", "Street Mick", 101, "Detroit",
         "mick@gmx.com", LocalDate.of(1974, 5, 10),
-        "mick74", "D34c$1345."),
+        "D34c$1345."),
     INVALID_DATA_WRONG_BIRTHDATE(UUID.randomUUID(), "Joe", "Cocker", "Street Joe", 103, "Detroit",
         "joe@gmx.com", LocalDate.now(),
-        "joe54", "Dt8c$1245as"),
+        "Dt8c$1245as"),
     INVALID_DATA_WRONG_PASSWORD(UUID.randomUUID(), "Joe", "Cocker", "Street Joe", 103, "Detroit",
         "joe@gmx.com", LocalDate.of(1944, 5, 20),
-        "joe54", "password");
+        "password");
 
     private final UUID id;
     private final String firstName;
@@ -40,12 +39,11 @@ public class CustomerDummyData {
     private final String email;
     private final String city;
     private final LocalDate birthDate;
-    private final String nickName;
     private final String password;
 
     DummyData(final UUID id, final String firstName, final String lastName,
         final String streetAddress, final Integer postalCode,
-        final String city, final String email, final LocalDate birthDate, final String nickName,
+        final String city, final String email, final LocalDate birthDate,
         final String password) {
       this.id = id;
       this.firstName = firstName;
@@ -55,7 +53,6 @@ public class CustomerDummyData {
       this.city = city;
       this.email = email;
       this.birthDate = birthDate;
-      this.nickName = nickName;
       this.password = password;
     }
 
@@ -89,10 +86,6 @@ public class CustomerDummyData {
 
     public LocalDate getBirthDate() {
       return birthDate;
-    }
-
-    public String getNickName() {
-      return nickName;
     }
 
     public String getPassword() {

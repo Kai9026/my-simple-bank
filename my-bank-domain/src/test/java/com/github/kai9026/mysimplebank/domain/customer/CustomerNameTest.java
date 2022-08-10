@@ -10,26 +10,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class CustomerNameTest {
 
   @Test
-  @DisplayName("Test creation with null FIRSTNAME, expected IllegalArgumentException")
+  @DisplayName("Test creation with null FIRSTNAME, expected DomainValidationException")
   void createCustomerName_withNullFirstName_throwsException() {
 
     assertThatThrownBy(() -> createCustomerName(INVALID_DATA_INVALID_FIRSTNAME))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Firstname and lastname cannot be null");
   }
 
   @Test
-  @DisplayName("Test creation with null LASTNAME, expected IllegalArgumentException")
+  @DisplayName("Test creation with null LASTNAME, expected DomainValidationException")
   void createCustomerName_withNullLastName_throwsException() {
 
     assertThatThrownBy(() -> createCustomerName(INVALID_DATA_INVALID_LASTNAME))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Firstname and lastname cannot be null");
   }
 

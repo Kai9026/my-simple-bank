@@ -2,6 +2,7 @@ package com.github.kai9026.mysimplebank.domain.customer;
 
 import static com.github.kai9026.mysimplebank.domain.shared.RequiredFieldValidator.isEmptyField;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import com.github.kai9026.mysimplebank.domain.shared.objects.ValueObject;
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class CustomerName implements ValueObject {
 
   private static void validateName(String firstName, String lastName) {
     if (isEmptyField(firstName) || isEmptyField(lastName)) {
-      throw new IllegalArgumentException("Firstname and lastname cannot be null");
+      throw new DomainValidationException("Firstname and lastname cannot be null");
     }
   }
 

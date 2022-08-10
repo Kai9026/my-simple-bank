@@ -2,6 +2,7 @@ package com.github.kai9026.mysimplebank.domain.customer;
 
 import static com.github.kai9026.mysimplebank.domain.shared.RequiredFieldValidator.isEmptyField;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import com.github.kai9026.mysimplebank.domain.shared.objects.ValueObject;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -26,13 +27,13 @@ public class EmailAddress implements ValueObject {
 
   private static void validateEmail(String email) {
     if (isEmptyField(email)) {
-      throw new IllegalArgumentException("Email cannot be null");
+      throw new DomainValidationException("Email cannot be null");
     }
 
     final var regexPattern = Pattern.compile(REGEX_VALID_EMAIL);
     final var matcher = regexPattern.matcher(email);
     if (!matcher.matches()) {
-      throw new IllegalArgumentException("Email format is not valid");
+      throw new DomainValidationException("Email format is not valid");
     }
   }
 

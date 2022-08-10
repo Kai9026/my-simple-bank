@@ -10,26 +10,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class CustomerTest {
 
   @Test
-  @DisplayName("Test creation with customer age lower than eighteen, expected IllegalArgumentException")
+  @DisplayName("Test creation with customer age lower than eighteen, expected DomainValidationException")
   void createCustomerAggregate_withNullCustomerId_throwsException() {
 
     assertThatThrownBy(() -> createCustomerAggregate(INVALID_DATA_WRONG_BIRTHDATE))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Customer age must be greater than 18");
   }
 
   @Test
-  @DisplayName("Test creation with weak password, expected IllegalArgumentException")
+  @DisplayName("Test creation with weak password, expected DomainValidationException")
   void createCustomerAggregate_withNullFirstName_throwsException() {
 
     assertThatThrownBy(() -> createCustomerAggregate(INVALID_DATA_WRONG_PASSWORD))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Password format is not valid");
   }
 
@@ -48,7 +49,6 @@ class CustomerTest {
     assertEquals(VALID_DATA.getPostalCode(), customerAggregate.customerAddress().postalCode());
     assertEquals(VALID_DATA.getCity(), customerAggregate.customerAddress().city());
     assertEquals(VALID_DATA.getBirthDate(), customerAggregate.birthDate());
-    assertEquals(VALID_DATA.getNickName(), customerAggregate.nickName());
     assertEquals(VALID_DATA.getPassword(), customerAggregate.password().pwd());
     assertEquals(VALID_DATA.getEmail(), customerAggregate.emailAddress().email());
   }
@@ -74,7 +74,7 @@ class CustomerTest {
     final var newEmail = "joe@gmail";
 
     assertThatThrownBy(() -> customerAggregate.changeEmail(newEmail))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Email format is not valid");
   }
 
@@ -104,7 +104,7 @@ class CustomerTest {
     final var newCity = "Ohio";
 
     assertThatThrownBy(() -> customerAggregate.changeAddress(newStreet, newPostalCode, newCity))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Postal code format is not valid");
   }
 
@@ -128,7 +128,7 @@ class CustomerTest {
     final var newPassword = "123456";
 
     assertThatThrownBy(() -> customerAggregate.changePassword(newPassword))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Password format is not valid");
   }
 

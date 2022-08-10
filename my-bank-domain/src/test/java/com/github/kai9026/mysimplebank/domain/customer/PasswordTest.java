@@ -9,17 +9,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class PasswordTest {
 
   @Test
-  @DisplayName("Test creation with null EMAIL_ADDRESS, expected IllegalArgumentException")
+  @DisplayName("Test creation with null EMAIL_ADDRESS, expected DomainValidationException")
   void createPassword_withNullEmailAddress_throwsException() {
 
     assertThatThrownBy(() -> createPassword(INVALID_DATA_NULL_PASSWORD))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Password cannot be null");
   }
 

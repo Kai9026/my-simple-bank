@@ -10,26 +10,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class EmailAddressTest {
 
   @Test
-  @DisplayName("Test creation with null EMAIL, expected IllegalArgumentException")
+  @DisplayName("Test creation with null EMAIL, expected DomainValidationException")
   void createEmailAddress_withNullEmail_throwsException() {
 
     assertThatThrownBy(() -> createEmail(INVALID_DATA_NULL_EMAIL))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Email cannot be null");
   }
 
   @Test
-  @DisplayName("Test creation with invalid EMAIL, expected IllegalArgumentException")
+  @DisplayName("Test creation with invalid EMAIL, expected DomainValidationException")
   void createEmailAddress_withInvalidEmail_throwsException() {
 
     assertThatThrownBy(() -> createEmail(INVALID_DATA_INVALID_EMAIL))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Email format is not valid");
   }
 

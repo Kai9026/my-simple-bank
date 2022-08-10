@@ -2,6 +2,7 @@ package com.github.kai9026.mysimplebank.domain.customer;
 
 import static com.github.kai9026.mysimplebank.domain.shared.RequiredFieldValidator.isEmptyField;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import com.github.kai9026.mysimplebank.domain.shared.objects.ValueObject;
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class Password implements ValueObject {
 
   private static void validatePassword(String password) {
     if (isEmptyField(password)) {
-      throw new IllegalArgumentException("Password cannot be null");
+      throw new DomainValidationException("Password cannot be null");
     }
   }
 
