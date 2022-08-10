@@ -20,6 +20,11 @@
       <groupId>com.github.kai9026</groupId>
       <artifactId>my-bank-domain</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
