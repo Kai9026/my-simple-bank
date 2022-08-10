@@ -4,6 +4,7 @@ import static com.github.kai9026.mysimplebank.domain.shared.RequiredFieldValidat
 import static java.util.Objects.hash;
 import static java.util.Objects.isNull;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import com.github.kai9026.mysimplebank.domain.shared.objects.ValueObject;
 import java.util.Objects;
 
@@ -31,9 +32,9 @@ public class PostalAddress implements ValueObject {
   private static void validatePostalAddressFields(String streetAddress, Integer postalCode,
       String city) {
     if (isEmptyField(streetAddress) || isNull(postalCode) || isEmptyField(city)) {
-      throw new IllegalArgumentException("Street address, postal code and city cannot be null");
+      throw new DomainValidationException("Street address, postal code and city cannot be null");
     } else if (!(postalCode > 0 && postalCode < 99999)) {
-      throw new IllegalArgumentException("Postal code format is not valid");
+      throw new DomainValidationException("Postal code format is not valid");
     }
   }
 
@@ -70,6 +71,7 @@ public class PostalAddress implements ValueObject {
 
   @Override
   public String toString() {
-    return "Postal address='" + this.streetAddress + ", " + this.postalCode + ", " + this.city + "'";
+    return "Postal address='" + this.streetAddress + ", " + this.postalCode + ", " + this.city
+        + "'";
   }
 }

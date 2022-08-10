@@ -12,44 +12,45 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class PostalAddressTest {
 
   @Test
-  @DisplayName("Test creation with null STREET_ADDRESS, expected IllegalArgumentException")
+  @DisplayName("Test creation with null STREET_ADDRESS, expected DomainValidationException")
   void createPostalAddress_withNullStreetAddress_throwsException() {
 
     assertThatThrownBy(() -> createPostalAddressDummy(INVALID_DATA_NULL_STREET_ADDRESS))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Street address, postal code and city cannot be null");
   }
 
   @Test
-  @DisplayName("Test creation with null POSTAL_CODE, expected IllegalArgumentException")
+  @DisplayName("Test creation with null POSTAL_CODE, expected DomainValidationException")
   void createPostalAddress_withNullPostalCode_throwsException() {
 
     assertThatThrownBy(() -> createPostalAddressDummy(INVALID_DATA_NULL_POSTAL_CODE))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Street address, postal code and city cannot be null");
   }
 
   @Test
-  @DisplayName("Test creation with invalid POSTAL_CODE, expected IllegalArgumentException")
+  @DisplayName("Test creation with invalid POSTAL_CODE, expected DomainValidationException")
   void createPostalAddress_withInvalidPostalCode_throwsException() {
 
     assertThatThrownBy(() -> createPostalAddressDummy(INVALID_DATA_INVALID_POSTAL_CODE))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Postal code format is not valid");
   }
 
   @Test
-  @DisplayName("Test creation with null CITY, expected IllegalArgumentException")
+  @DisplayName("Test creation with null CITY, expected DomainValidationException")
   void createPostalAddress_withNullCity_throwsException() {
 
     assertThatThrownBy(() -> createPostalAddressDummy(INVALID_DATA_NULL_CITY))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Street address, postal code and city cannot be null");
   }
 

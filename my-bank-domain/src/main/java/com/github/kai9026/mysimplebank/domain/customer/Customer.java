@@ -1,6 +1,7 @@
 package com.github.kai9026.mysimplebank.domain.customer;
 
 import com.github.kai9026.mysimplebank.domain.customer.id.CustomerId;
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import com.github.kai9026.mysimplebank.domain.shared.objects.AggregateRoot;
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,10 +16,9 @@ public class Customer extends AggregateRoot<CustomerId> {
       "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,20}$";
 
   private final CustomerName customerFullName;
+  private final LocalDate birthDate;
   private PostalAddress customerAddress;
   private EmailAddress emailAddress;
-  private final LocalDate birthDate;
-  private final String nickName;
   private Password password;
 
   private Customer(Builder builder) {
@@ -27,8 +27,26 @@ public class Customer extends AggregateRoot<CustomerId> {
     this.customerAddress = builder.streetAddress;
     this.emailAddress = builder.email;
     this.birthDate = builder.birthDate;
-    this.nickName = builder.nickName;
     this.password = builder.password;
+  }
+
+  // Enforcing business invariants
+  private static void validateCustomerAge(LocalDate birthDate) {
+    final var now = LocalDate.now();
+    final var yearsBetween = Period.between(birthDate, now).getYears();
+
+    if (yearsBetween < MIN_CUSTOMER_AGE) {
+      throw new DomainValidationException("Customer age must be greater than 18");
+    }
+  }
+
+  private static void validatePasswordContent(String password) {
+    final var regexPattern = Pattern.compile(PWD_REQUIRED_FORMAT);
+    final var matcher = regexPattern.matcher(password);
+
+    if (!matcher.matches()) {
+      throw new DomainValidationException("Password format is not valid");
+    }
   }
 
   public void changeEmail(final String email) {
@@ -60,56 +78,65 @@ public class Customer extends AggregateRoot<CustomerId> {
     return birthDate;
   }
 
-  public String nickName() {
-    return nickName;
-  }
-
   public Password password() {
     return password;
   }
 
+  @Override
+  public String toString() {
+    return "Customer{" +
+        "fullName='" + this.customerFullName + '\'' +
+        ", streetAddress='" + this.customerAddress + '\'' +
+        ", email='" + this.emailAddress + '\'' +
+        ", birthDate=" + this.birthDate +
+        ", password='" + this.password + '\'' +
+        '}';
+  }
+
   // Builder pattern
   public interface IdStep {
+
     FullNameStep id(UUID customerId);
   }
 
   public interface FullNameStep {
+
     StreetAddressStep fullName(String firstName, String lastName);
   }
 
   public interface StreetAddressStep {
+
     EmailAddressStep streetAddress(String streetAddress, Integer postalCode, String city);
   }
 
   public interface EmailAddressStep {
+
     BirthDateStep emailAddress(String email);
   }
 
   public interface BirthDateStep {
-    NickNameStep birthDate(LocalDate birthDate);
-  }
 
-  public interface NickNameStep {
-    PasswordStep nickName(String nickName);
+    PasswordStep birthDate(LocalDate birthDate);
   }
 
   public interface PasswordStep {
+
     Build password(String password);
   }
 
   public interface Build {
+
     Customer build();
   }
 
   public static class Builder implements IdStep, FullNameStep, StreetAddressStep, EmailAddressStep,
-      BirthDateStep, NickNameStep, PasswordStep, Build {
+      BirthDateStep, PasswordStep, Build {
 
     private CustomerId customerId;
     private CustomerName fullName;
     private PostalAddress streetAddress;
     private EmailAddress email;
     private LocalDate birthDate;
-    private String nickName;
     private Password password;
 
     @Override
@@ -137,16 +164,10 @@ public class Customer extends AggregateRoot<CustomerId> {
     }
 
     @Override
-    public NickNameStep birthDate(LocalDate birthDate) {
+    public PasswordStep birthDate(LocalDate birthDate) {
       Customer.validateCustomerAge(birthDate);
 
       this.birthDate = birthDate;
-      return this;
-    }
-
-    @Override
-    public PasswordStep nickName(String nickName) {
-      this.nickName = nickName;
       return this;
     }
 
@@ -162,36 +183,5 @@ public class Customer extends AggregateRoot<CustomerId> {
     public Customer build() {
       return new Customer(this);
     }
-  }
-
-  // Enforcing business invariants
-  private static void validateCustomerAge(LocalDate birthDate) {
-    final var now = LocalDate.now();
-    final var yearsBetween = Period.between(birthDate, now).getYears();
-
-    if (yearsBetween < MIN_CUSTOMER_AGE) {
-      throw new IllegalArgumentException("Customer age must be greater than 18");
-    }
-  }
-
-  private static void validatePasswordContent(String password) {
-    final var regexPattern = Pattern.compile(PWD_REQUIRED_FORMAT);
-    final var matcher = regexPattern.matcher(password);
-
-    if (!matcher.matches()) {
-      throw new IllegalArgumentException("Password format is not valid");
-    }
-  }
-
-  @Override
-  public String toString() {
-    return "Customer{" +
-        "fullName='" + this.customerFullName + '\'' +
-        ", streetAddress='" + this.customerAddress + '\'' +
-        ", email='" + this.emailAddress + '\'' +
-        ", birthDate=" + this.birthDate +
-        ", nickName='" + this.nickName + '\'' +
-        ", password='" + this.password + '\'' +
-        '}';
   }
 }
