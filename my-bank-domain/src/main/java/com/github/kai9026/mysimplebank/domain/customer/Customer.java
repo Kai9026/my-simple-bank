@@ -13,7 +13,7 @@ public class Customer extends AggregateRoot<CustomerId> {
   private static final long serialVersionUID = -4753588888777325217L;
   private static final int MIN_CUSTOMER_AGE = 18;
   private static final String PWD_REQUIRED_FORMAT =
-      "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,20}$";
+      "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,250}$";
 
   private final CustomerName customerFullName;
   private final LocalDate birthDate;

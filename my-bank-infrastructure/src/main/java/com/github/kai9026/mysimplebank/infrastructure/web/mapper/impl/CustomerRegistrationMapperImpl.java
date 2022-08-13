@@ -1,0 +1,38 @@
+package com.github.kai9026.mysimplebank.infrastructure.web.mapper.impl;
+
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerAddress;
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerFullName;
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationRequest;
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationResponse;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerAddressDTO;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerNameDTO;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerRequest;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.CustomerRegistrationMapper;
+
+public class CustomerRegistrationMapperImpl implements CustomerRegistrationMapper {
+
+  @Override
+  public CustomerRegistrationRequest toApplicationModel(CustomerRequest request) {
+    final var fullName =
+        new CustomerFullName(request.getName().getFirstName(), request.getName().getLastName());
+    final var address =
+        new CustomerAddress(request.getAddress().getStreet(), request.getAddress().getPostalCode(),
+            request.getAddress().getCity());
+    return new CustomerRegistrationRequest(fullName, address, request.getEmail(),
+        request.getBirthDate(), request.getPassword());
+  }
+
+  @Override
+  public CustomerResource toResourceModel(CustomerRegistrationResponse response) {
+    return CustomerResource.builder()
+        .customerCode(response.getCode().toString())
+        .name(new CustomerNameDTO(response.getCustomerName().getFirstName(),
+            response.getCustomerName().getLastName()))
+        .address(new CustomerAddressDTO(response.getCustomerAddress().getStreet(),
+            response.getCustomerAddress().getCity(),
+            response.getCustomerAddress().getPostalCode()))
+        .email(response.getEmail())
+        .birthDate(response.getBirthDate().toString()).build();
+  }
+}
