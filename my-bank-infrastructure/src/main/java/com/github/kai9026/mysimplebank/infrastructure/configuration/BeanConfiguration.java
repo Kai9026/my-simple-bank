@@ -7,6 +7,8 @@ import com.github.kai9026.mysimplebank.infrastructure.database.mapper.CustomerMa
 import com.github.kai9026.mysimplebank.infrastructure.database.mapper.impl.CustomerMapperImpl;
 import com.github.kai9026.mysimplebank.infrastructure.database.repository.CustomerJpaRepository;
 import com.github.kai9026.mysimplebank.infrastructure.database.repository.impl.CustomerRepositoryImpl;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.CustomerRegistrationMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.impl.CustomerRegistrationMapperImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,6 +29,11 @@ public class BeanConfiguration {
   @Bean
   public CustomerRepository customerRepository(final CustomerJpaRepository customerJpaRepository) {
     return new CustomerRepositoryImpl(customerJpaRepository, customerMapper());
+  }
+
+  @Bean
+  public CustomerRegistrationMapper customerRegistrationMapper() {
+    return new CustomerRegistrationMapperImpl();
   }
 
 }
