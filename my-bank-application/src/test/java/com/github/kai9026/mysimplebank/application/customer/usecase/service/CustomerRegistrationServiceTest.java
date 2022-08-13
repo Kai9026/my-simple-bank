@@ -5,19 +5,24 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.github.kai9026.mysimplebank.application.customer.usecase.register.model.CustomerRegistrationRequest;
-import com.github.kai9026.mysimplebank.application.customer.usecase.register.model.CustomerRegistrationRequest.Address;
-import com.github.kai9026.mysimplebank.application.customer.usecase.register.model.CustomerRegistrationRequest.FullName;
-import com.github.kai9026.mysimplebank.application.customer.usecase.register.service.CustomerRegistrationService;
 import com.github.kai9026.mysimplebank.application.exception.DuplicateCustomerException;
 import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataException;
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerAddress;
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerFullName;
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationRequest;
+import com.github.kai9026.mysimplebank.application.usecase.customer.register.service.CustomerRegistrationService;
 import com.github.kai9026.mysimplebank.domain.customer.Customer;
 import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,7 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-@TestInstance(Lifecycle.PER_CLASS)
 class CustomerRegistrationServiceTest {
 
   public static final String FIRSTNAME = "name";
@@ -42,7 +46,7 @@ class CustomerRegistrationServiceTest {
 
   private CustomerRegistrationService customerRegistrationService;
 
-  @BeforeAll
+  @BeforeEach
   private void init() {
     this.customerRegistrationService = new CustomerRegistrationService(customerRepository);
   }
@@ -55,8 +59,8 @@ class CustomerRegistrationServiceTest {
         .thenReturn(true);
     when(this.customerRepository.save(any(Customer.class)))
         .thenReturn(dummyCustomer());
-    final var fullName = new FullName(FIRSTNAME, LASTNAME);
-    final var address = new Address(STREET, POSTAL_CODE, CITY);
+    final var fullName = new CustomerFullName(FIRSTNAME, LASTNAME);
+    final var address = new CustomerAddress(STREET, POSTAL_CODE, CITY);
     final var request = new CustomerRegistrationRequest(fullName, address, EMAIL,
         BIRTH_DATE, PASSWORD);
 
@@ -64,6 +68,9 @@ class CustomerRegistrationServiceTest {
         .isInstanceOf(DuplicateCustomerException.class)
         .hasMessageContaining(
             "Customer with email '" + EMAIL + "' already exists");
+    verify(this.customerRepository, times(1))
+        .checkDuplicatedUserByEmail(anyString());
+    verifyNoMoreInteractions(this.customerRepository);
   }
 
   @Test
@@ -74,8 +81,8 @@ class CustomerRegistrationServiceTest {
         .thenReturn(false);
     when(this.customerRepository.save(any(Customer.class)))
         .thenReturn(dummyCustomer());
-    final var fullName = new FullName(FIRSTNAME, LASTNAME);
-    final var address = new Address(STREET, 0, CITY);
+    final var fullName = new CustomerFullName(FIRSTNAME, LASTNAME);
+    final var address = new CustomerAddress(STREET, 0, CITY);
     final var request = new CustomerRegistrationRequest(fullName, address, EMAIL,
         BIRTH_DATE, PASSWORD);
 
@@ -83,6 +90,8 @@ class CustomerRegistrationServiceTest {
         .isInstanceOf(InvalidInputDataException.class)
         .hasMessageContaining(
             "Postal code format is not valid");
+    verify(this.customerRepository, times(1))
+        .checkDuplicatedUserByEmail(anyString());
   }
 
   @Test
@@ -93,8 +102,8 @@ class CustomerRegistrationServiceTest {
         .thenReturn(false);
     when(this.customerRepository.save(any(Customer.class)))
         .thenReturn(dummyCustomer());
-    final var fullName = new FullName(FIRSTNAME, LASTNAME);
-    final var address = new Address(STREET, POSTAL_CODE, CITY);
+    final var fullName = new CustomerFullName(FIRSTNAME, LASTNAME);
+    final var address = new CustomerAddress(STREET, POSTAL_CODE, CITY);
     final var request = new CustomerRegistrationRequest(fullName, address, EMAIL,
         BIRTH_DATE, PASSWORD);
 
@@ -102,6 +111,10 @@ class CustomerRegistrationServiceTest {
         request);
 
     assertNotNull(customerRegistrationResponse);
+    verify(this.customerRepository, times(1))
+        .checkDuplicatedUserByEmail(anyString());
+    verify(this.customerRepository, times(1))
+        .save(any(Customer.class));
   }
 
   private Customer dummyCustomer() {
