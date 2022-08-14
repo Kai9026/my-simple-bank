@@ -19,12 +19,14 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring.boot.version>2.7.2</spring.boot.version>
+		<skip.surefire.tests>false</skip.surefire.tests>
 	</properties>
 
 	<modules>
 		<module>my-bank-domain</module>
 		<module>my-bank-application</module>
 		<module>my-bank-infrastructure</module>
+		<module>my-bank-test-archunit</module>
 	</modules>
 
 	<dependencyManagement>
@@ -91,6 +93,13 @@
 								</manifestSection>
 							</manifestSections>
 						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<skipTests>${skip.surefire.tests}</skipTests>
 					</configuration>
 				</plugin>
 			</plugins>
