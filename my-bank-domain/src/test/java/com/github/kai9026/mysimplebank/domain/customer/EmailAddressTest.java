@@ -1,10 +1,10 @@
 package com.github.kai9026.mysimplebank.domain.customer;
 
-import static com.github.kai9026.mysimplebank.domain.dummy.EmailAddressDummyData.DummyData.INVALID_DATA_INVALID_EMAIL;
-import static com.github.kai9026.mysimplebank.domain.dummy.EmailAddressDummyData.DummyData.INVALID_DATA_NULL_EMAIL;
-import static com.github.kai9026.mysimplebank.domain.dummy.EmailAddressDummyData.DummyData.OTHER_VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.EmailAddressDummyData.DummyData.VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.EmailAddressDummyData.createEmail;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.EmailAddressDummyData.DummyData.INVALID_DATA_INVALID_EMAIL;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.EmailAddressDummyData.DummyData.INVALID_DATA_NULL_EMAIL;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.EmailAddressDummyData.DummyData.OTHER_VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.EmailAddressDummyData.DummyData.VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.EmailAddressDummyData.createEmail;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

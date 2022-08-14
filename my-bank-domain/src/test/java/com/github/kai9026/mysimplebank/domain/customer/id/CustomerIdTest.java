@@ -1,9 +1,9 @@
 package com.github.kai9026.mysimplebank.domain.customer.id;
 
-import static com.github.kai9026.mysimplebank.domain.dummy.id.CustomerIdDummyData.DummyData.INVALID_DATA_NULL_UUID;
-import static com.github.kai9026.mysimplebank.domain.dummy.id.CustomerIdDummyData.DummyData.OTHER_VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.id.CustomerIdDummyData.DummyData.VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.id.CustomerIdDummyData.createCustomerId;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.id.CustomerIdDummyData.DummyData.INVALID_DATA_NULL_UUID;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.id.CustomerIdDummyData.DummyData.OTHER_VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.id.CustomerIdDummyData.DummyData.VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.id.CustomerIdDummyData.createCustomerId;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

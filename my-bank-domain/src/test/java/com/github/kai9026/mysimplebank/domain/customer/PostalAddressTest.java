@@ -1,12 +1,12 @@
 package com.github.kai9026.mysimplebank.domain.customer;
 
-import static com.github.kai9026.mysimplebank.domain.dummy.PostalAddressDummyData.DummyData.INVALID_DATA_INVALID_POSTAL_CODE;
-import static com.github.kai9026.mysimplebank.domain.dummy.PostalAddressDummyData.DummyData.INVALID_DATA_NULL_CITY;
-import static com.github.kai9026.mysimplebank.domain.dummy.PostalAddressDummyData.DummyData.INVALID_DATA_NULL_POSTAL_CODE;
-import static com.github.kai9026.mysimplebank.domain.dummy.PostalAddressDummyData.DummyData.INVALID_DATA_NULL_STREET_ADDRESS;
-import static com.github.kai9026.mysimplebank.domain.dummy.PostalAddressDummyData.DummyData.OTHER_VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.PostalAddressDummyData.DummyData.VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.PostalAddressDummyData.createPostalAddressDummy;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.PostalAddressDummyData.DummyData.INVALID_DATA_INVALID_POSTAL_CODE;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.PostalAddressDummyData.DummyData.INVALID_DATA_NULL_CITY;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.PostalAddressDummyData.DummyData.INVALID_DATA_NULL_POSTAL_CODE;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.PostalAddressDummyData.DummyData.INVALID_DATA_NULL_STREET_ADDRESS;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.PostalAddressDummyData.DummyData.OTHER_VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.PostalAddressDummyData.DummyData.VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.PostalAddressDummyData.createPostalAddressDummy;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.domain.customer.id;
+package com.github.kai9026.mysimplebank.domain.bankaccount.id;
 
 import static java.util.Objects.isNull;
 
@@ -7,18 +7,18 @@ import com.github.kai9026.mysimplebank.domain.shared.objects.ValueObject;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CustomerId extends DomainObjectId<UUID> implements ValueObject {
+public class BankAccountId extends DomainObjectId<UUID> implements ValueObject {
 
-  private CustomerId(UUID id) {
+  private BankAccountId(UUID id) {
     super(id);
   }
 
-  public static CustomerId fromId(final UUID identity) {
+  public static BankAccountId fromId(final UUID identity) {
     if (isNull(identity)) {
-      throw new IllegalArgumentException("CustomerId cannot be null");
+      throw new IllegalArgumentException("BankAccountId cannot be null");
     }
 
-    return new CustomerId(identity);
+    return new BankAccountId(identity);
   }
 
   @Override
@@ -34,12 +34,12 @@ public class CustomerId extends DomainObjectId<UUID> implements ValueObject {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    final var otherCustomerId = (CustomerId) o;
-    return Objects.equals(id, otherCustomerId.id);
+    final var otherAccountId = (BankAccountId) o;
+    return Objects.equals(id, otherAccountId.id);
   }
 
   @Override
   public String toString() {
-    return "CustomerId{id=" + id + '}';
+    return "AccountId{id=" + id + '}';
   }
 }

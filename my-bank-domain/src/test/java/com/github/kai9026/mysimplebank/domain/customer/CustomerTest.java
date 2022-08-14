@@ -1,10 +1,10 @@
 package com.github.kai9026.mysimplebank.domain.customer;
 
-import static com.github.kai9026.mysimplebank.domain.dummy.CustomerDummyData.DummyData.INVALID_DATA_WRONG_BIRTHDATE;
-import static com.github.kai9026.mysimplebank.domain.dummy.CustomerDummyData.DummyData.INVALID_DATA_WRONG_PASSWORD;
-import static com.github.kai9026.mysimplebank.domain.dummy.CustomerDummyData.DummyData.OTHER_VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.CustomerDummyData.DummyData.VALID_DATA;
-import static com.github.kai9026.mysimplebank.domain.dummy.CustomerDummyData.createCustomerAggregate;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.CustomerDummyData.DummyData.INVALID_DATA_WRONG_BIRTHDATE;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.CustomerDummyData.DummyData.INVALID_DATA_WRONG_PASSWORD;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.CustomerDummyData.DummyData.OTHER_VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.CustomerDummyData.DummyData.VALID_DATA;
+import static com.github.kai9026.mysimplebank.domain.dummy.customer.CustomerDummyData.createCustomerAggregate;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
