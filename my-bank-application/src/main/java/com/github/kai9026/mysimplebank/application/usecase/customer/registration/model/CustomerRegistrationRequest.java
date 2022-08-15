@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.application.usecase.customer.register.model;
+package com.github.kai9026.mysimplebank.application.usecase.customer.registration.model;
 
 import static com.github.kai9026.mysimplebank.domain.shared.RequiredFieldValidator.isEmptyField;
 import static java.util.Objects.isNull;

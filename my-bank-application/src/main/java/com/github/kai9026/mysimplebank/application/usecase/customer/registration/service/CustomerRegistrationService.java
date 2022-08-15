@@ -1,9 +1,9 @@
-package com.github.kai9026.mysimplebank.application.usecase.customer.register.service;
+package com.github.kai9026.mysimplebank.application.usecase.customer.registration.service;
 
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.CustomerRegistrationUseCase;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.mapper.CustomerRegistrationUseCaseMapper;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationRequest;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationResponse;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.mapper.CustomerRegistrationUseCaseMapper;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationRequest;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationResponse;
 import com.github.kai9026.mysimplebank.application.exception.DuplicateCustomerException;
 import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataException;
 import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;

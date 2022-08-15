@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.github.kai9026.mysimplebank.domain.bankaccount.id.BankAccountId;
 import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -84,7 +85,7 @@ class BankAccountTest {
     final var bankAccount = createBankAccount(VALID_DATA);
 
     bankAccount.depositMoney(25.00, "EUR", "Bizum DAZN",
-        UUID.randomUUID());
+        BankAccountId.fromId(UUID.randomUUID()));
 
     assertEquals(Money.of(25.00, "EUR"), bankAccount.accountBalance());
     assertThat(bankAccount.activeTransactions()).hasSize(1);
@@ -96,7 +97,7 @@ class BankAccountTest {
     final var bankAccount = createBankAccount(VALID_DATA);
 
     assertThatThrownBy(() -> bankAccount.depositMoney(25.00, "USD", "Bizum DAZN",
-        UUID.randomUUID()))
+        BankAccountId.fromId(UUID.randomUUID())))
         .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Currency is incorrect. Must be non empty and 'EUR'");
   }

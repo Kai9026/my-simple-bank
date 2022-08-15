@@ -20,9 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kai9026.mysimplebank.application.exception.DuplicateCustomerException;
 import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataException;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.CustomerRegistrationUseCase;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationRequest;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationResponse;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationRequest;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationResponse;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
 import com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.RestExceptionHandler;

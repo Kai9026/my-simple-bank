@@ -1,9 +1,9 @@
-package com.github.kai9026.mysimplebank.application.usecase.customer.register.mapper;
+package com.github.kai9026.mysimplebank.application.usecase.customer.registration.mapper;
 
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerAddress;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerFullName;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationRequest;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationResponse;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerAddress;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerFullName;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationRequest;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationResponse;
 import com.github.kai9026.mysimplebank.domain.customer.Customer;
 import java.util.UUID;
 

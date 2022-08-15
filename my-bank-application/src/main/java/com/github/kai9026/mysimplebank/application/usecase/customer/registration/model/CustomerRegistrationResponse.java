@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.application.usecase.customer.register.model;
+package com.github.kai9026.mysimplebank.application.usecase.customer.registration.model;
 
 import java.time.LocalDate;
 import java.util.UUID;

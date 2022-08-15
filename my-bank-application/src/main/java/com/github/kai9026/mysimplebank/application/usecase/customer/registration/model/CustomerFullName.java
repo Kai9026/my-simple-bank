@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.application.usecase.customer.register.model;
+package com.github.kai9026.mysimplebank.application.usecase.customer.registration.model;
 
 public class CustomerFullName {
 
