@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.domain.dummy.id;
+package com.github.kai9026.mysimplebank.domain.dummy.customer.id;
 
 import com.github.kai9026.mysimplebank.domain.customer.id.CustomerId;
 import java.util.UUID;

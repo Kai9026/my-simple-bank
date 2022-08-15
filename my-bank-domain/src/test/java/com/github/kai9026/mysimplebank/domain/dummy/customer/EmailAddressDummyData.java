@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.domain.dummy;
+package com.github.kai9026.mysimplebank.domain.dummy.customer;
 
 import com.github.kai9026.mysimplebank.domain.customer.EmailAddress;
 
