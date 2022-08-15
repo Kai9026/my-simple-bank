@@ -7,26 +7,22 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.github.kai9026.mysimplebank.application.exception.DuplicateCustomerException;
 import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataException;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerAddress;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerFullName;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.model.CustomerRegistrationRequest;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.service.CustomerRegistrationService;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerAddress;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerFullName;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationRequest;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.service.CustomerRegistrationService;
 import com.github.kai9026.mysimplebank.domain.customer.Customer;
 import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;
 import java.time.LocalDate;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -74,7 +70,7 @@ class CustomerRegistrationServiceTest {
   }
 
   @Test
-  @DisplayName("Test customer registration use case, throws IllegalArgumentException")
+  @DisplayName("Test customer registration use case, throws InvalidInputDataException")
   void registerCustomer_withInvalidParameters_throwsException() {
 
     when(this.customerRepository.checkDuplicatedUserByEmail(anyString()))

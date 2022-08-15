@@ -22,7 +22,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
 
   private final BankAccountNumber bankAccountNumber;
   private Money balanceTotalAccount;
-  private String aliasAccount;
+  private String accountAlias;
 
   private String defaultCurrency;
   private final CustomerId customerCode;
@@ -34,7 +34,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
       final Money balance, final String currency, final CustomerId customerCode,
       final LocalDate startIntervalDate) {
     super(bankAccountId);
-    this.aliasAccount = alias;
+    this.accountAlias = alias;
     this.customerCode = customerCode;
     this.balanceTotalAccount = balance;
     this.defaultCurrency = currency;
@@ -79,7 +79,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   }
 
   public String aliasAccount() {
-    return this.aliasAccount;
+    return this.accountAlias;
   }
 
   public CustomerId accountCustomer() {
@@ -107,18 +107,17 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   }
 
   public void changeAliasAccount(final String newAliasAccount) {
-    this.aliasAccount = newAliasAccount;
+    this.accountAlias = newAliasAccount;
   }
 
   public void depositMoney(final double moneyAmount, final String currency,
-      final String concept, final UUID originAccountId) {
+      final String concept, final BankAccountId originAccountId) {
     if (isEmptyField(currency) || !currency.equals(this.defaultCurrency)) {
       throw new DomainValidationException(
           "Currency is incorrect. Must be non empty and '" + this.defaultCurrency + "'");
     }
-    final var originBankAccountId = BankAccountId.fromId(originAccountId);
     final var transaction =
-        BankAccountTransaction.createTransactionWith(UUID.randomUUID(), originBankAccountId,
+        BankAccountTransaction.createTransactionWith(UUID.randomUUID(), originAccountId,
             this.id(),
             Money.of(moneyAmount, currency), concept);
     this.transactionsInInterval.add(transaction);

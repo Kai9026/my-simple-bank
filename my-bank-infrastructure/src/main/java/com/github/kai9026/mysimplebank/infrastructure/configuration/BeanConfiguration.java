@@ -1,7 +1,7 @@
 package com.github.kai9026.mysimplebank.infrastructure.configuration;
 
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.CustomerRegistrationUseCase;
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.service.CustomerRegistrationService;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.service.CustomerRegistrationService;
 import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;
 import com.github.kai9026.mysimplebank.infrastructure.database.mapper.CustomerMapper;
 import com.github.kai9026.mysimplebank.infrastructure.database.mapper.impl.CustomerMapperImpl;

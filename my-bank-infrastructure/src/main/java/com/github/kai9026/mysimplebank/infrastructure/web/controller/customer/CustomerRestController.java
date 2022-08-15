@@ -2,7 +2,7 @@ package com.github.kai9026.mysimplebank.infrastructure.web.controller.customer;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-import com.github.kai9026.mysimplebank.application.usecase.customer.register.CustomerRegistrationUseCase;
+import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
 import com.github.kai9026.mysimplebank.infrastructure.web.mapper.CustomerRegistrationMapper;
