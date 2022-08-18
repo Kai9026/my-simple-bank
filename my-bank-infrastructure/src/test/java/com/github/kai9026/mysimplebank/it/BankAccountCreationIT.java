@@ -54,7 +54,7 @@ class BankAccountCreationIT {
       assertEquals(VALIDATION_DATA_ERROR.getErrorCode(), apiResponse.getBody().errorCode());
       assertEquals(VALIDATION_DATA_ERROR.getErrorMessage(), apiResponse.getBody().message());
       assertEquals(
-          "alias: no debe ser nulo",
+          "alias: must not be null",
           apiResponse.getBody().detail());
     });
   }
