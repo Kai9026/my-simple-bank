@@ -1,9 +1,9 @@
 package com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit;
 
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositRequest;
-import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositResponse;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 
 public interface BankAccountDepositUseCase {
 
-  BankAccountDepositResponse depositIntoAccount(BankAccountDepositRequest request);
+  BankAccountBaseResponse depositIntoAccount(BankAccountDepositRequest request);
 }

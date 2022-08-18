@@ -11,6 +11,8 @@ public class Money implements ValueObject {
 
   private static final int SCALE = 2;
   private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
+  public static final double ZERO_MONEY = 0.00;
+  public static final String CURRENCY_EUR_MONEY = "EUR";
 
   private final BigDecimal amount;
   private final Currency currencyCode;

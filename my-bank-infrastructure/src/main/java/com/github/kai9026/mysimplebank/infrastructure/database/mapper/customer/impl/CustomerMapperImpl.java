@@ -1,8 +1,8 @@
-package com.github.kai9026.mysimplebank.infrastructure.database.mapper.impl;
+package com.github.kai9026.mysimplebank.infrastructure.database.mapper.customer.impl;
 
 import com.github.kai9026.mysimplebank.domain.customer.Customer;
-import com.github.kai9026.mysimplebank.infrastructure.database.entity.CustomerEntity;
-import com.github.kai9026.mysimplebank.infrastructure.database.mapper.CustomerMapper;
+import com.github.kai9026.mysimplebank.infrastructure.database.entity.customer.CustomerEntity;
+import com.github.kai9026.mysimplebank.infrastructure.database.mapper.customer.CustomerMapper;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class CustomerMapperImpl implements CustomerMapper {

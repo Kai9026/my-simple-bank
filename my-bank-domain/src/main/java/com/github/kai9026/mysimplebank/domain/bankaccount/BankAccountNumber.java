@@ -25,6 +25,10 @@ public class BankAccountNumber implements ValueObject {
     return new BankAccountNumber(group1 + " " + group2 + " " + group3 + " " + group4);
   }
 
+  public static BankAccountNumber fromString(final String accountNumber) {
+    return new BankAccountNumber(accountNumber);
+  }
+
   public String number() {
     return this.number;
   }

@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CustomerRequest {
+public class CustomerCreationApiRequest {
 
   @NotNull
   private CustomerNameDTO name;

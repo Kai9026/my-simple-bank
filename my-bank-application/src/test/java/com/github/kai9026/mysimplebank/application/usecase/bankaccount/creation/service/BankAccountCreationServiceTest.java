@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataException;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.mapper.BankAccountCreationUseCaseMapper;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.model.BankAccountCreationRequest;
-import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.model.BankAccountCreationResponse;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.domain.bankaccount.BankAccount;
 import com.github.kai9026.mysimplebank.domain.bankaccount.repository.BankAccountRepository;
 import java.time.LocalDate;
@@ -61,8 +61,8 @@ class BankAccountCreationServiceTest {
         .thenReturn(mock(BankAccount.class));
     when(this.bankAccountRepository.save(any(BankAccount.class)))
         .thenReturn(dummyBankAccount());
-    when(this.bankAccountCreationUseCaseMapper.toBankAccountCreateResponse(any(BankAccount.class)))
-        .thenReturn(bankAccountCreationResponseDummy());
+    when(this.bankAccountCreationUseCaseMapper.toBankAccountBaseResponse(any(BankAccount.class)))
+        .thenReturn(bankAccountBaseResponseDummy());
 
     final var request =
         new BankAccountCreationRequest("alias", "EUR", UUID.randomUUID());
@@ -74,11 +74,13 @@ class BankAccountCreationServiceTest {
     verify(this.bankAccountCreationUseCaseMapper, times(1))
         .toBankAccount(any(BankAccountCreationRequest.class));
     verify(this.bankAccountCreationUseCaseMapper, times(1))
-        .toBankAccountCreateResponse(any(BankAccount.class));
+        .toBankAccountBaseResponse(any(BankAccount.class));
   }
 
-  private BankAccountCreationResponse bankAccountCreationResponseDummy() {
-    return new BankAccountCreationResponse("number", 0.00, "alias", "EUR", UUID.randomUUID());
+  private BankAccountBaseResponse bankAccountBaseResponseDummy() {
+    return new BankAccountBaseResponse(UUID.randomUUID(),
+        "number", 0.00, "alias",
+        "EUR", UUID.randomUUID());
   }
 
   private BankAccount dummyBankAccount() {

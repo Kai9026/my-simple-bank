@@ -7,7 +7,7 @@ import com.github.kai9026.mysimplebank.application.usecase.customer.registration
 import com.github.kai9026.mysimplebank.domain.customer.Customer;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerAddressDTO;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerNameDTO;
-import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerRequest;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -38,10 +38,10 @@ public final class CustomerDummyData {
     return new CustomerRegistrationResponse(UUID.randomUUID(), fullName, address, EMAIL, BIRTHDATE);
   }
 
-  public static CustomerRequest createCustomerRequest() {
+  public static CustomerCreationApiRequest createCustomerRequest() {
     final var name = new CustomerNameDTO(NAME, LASTNAME);
     final var address = new CustomerAddressDTO(STREET, CITY, POSTAL_CODE);
-    return new CustomerRequest(name, address, EMAIL, BIRTHDATE, PASSWORD);
+    return new CustomerCreationApiRequest(name, address, EMAIL, BIRTHDATE, PASSWORD);
   }
 
   public static CustomerResource createCustomerResourceDummy() {

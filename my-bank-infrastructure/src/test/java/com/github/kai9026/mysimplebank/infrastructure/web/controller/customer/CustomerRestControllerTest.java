@@ -4,6 +4,7 @@ import static com.github.kai9026.mysimplebank.infrastructure.web.controller.dumm
 import static com.github.kai9026.mysimplebank.infrastructure.web.controller.dummy.CustomerDummyData.createCustomerRequest;
 import static com.github.kai9026.mysimplebank.infrastructure.web.controller.dummy.CustomerDummyData.createCustomerResourceDummy;
 import static com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.model.ErrorCodeEnum.VALIDATION_DATA_ERROR;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,11 +25,11 @@ import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataExc
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationRequest;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationResponse;
-import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerRequest;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
 import com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.RestExceptionHandler;
 import com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.model.ErrorModel;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.CustomerRegistrationMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,7 @@ class CustomerRestControllerTest {
   @DisplayName("Test customer rest controller, if no errors then return a response with created status and resource")
   void createCustomer_withValidPayload_shouldReturnResponseWithStatusCreatedAndResource()
       throws Exception {
-    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerRequest.class)))
+    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerCreationApiRequest.class)))
         .thenReturn(mock(CustomerRegistrationRequest.class));
     final var customerRegistrationResponse = createCustomerRegistrationResponse();
     when(this.customerRegistrationUseCase.registerNewCustomer(
@@ -67,21 +69,17 @@ class CustomerRestControllerTest {
         .thenReturn(customerResourceDummy);
 
     final var customerRequest = createCustomerRequest();
-    final var responseResult = mockMvc.perform(post("/customer")
+    mockMvc.perform(post("/customer")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(customerRequest)))
         .andExpect(status().isCreated())
+        .andExpect(jsonPath("$").isNotEmpty())
         .andReturn();
-
-    final var responseString = responseResult.getResponse().getContentAsString();
-    final var customerResource =
-        objectMapper.readValue(responseString, CustomerResource.class);
-    assertNotNull(customerResource);
 
     verify(this.customerRegistrationUseCase, times(1))
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
     verify(this.customerRegistrationMapper, times(1))
-        .toApplicationModel(any(CustomerRequest.class));
+        .toApplicationModel(any(CustomerCreationApiRequest.class));
     verify(this.customerRegistrationMapper, times(1))
         .toResourceModel(any(CustomerRegistrationResponse.class));
   }
@@ -90,40 +88,34 @@ class CustomerRestControllerTest {
   @DisplayName("Test customer rest controller, if duplicated customer then return a response with bad request response status")
   void createCustomer_withExistingEmail_shouldReturnResponseWithBadRequestStatus()
       throws Exception {
-    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerRequest.class)))
+    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerCreationApiRequest.class)))
         .thenReturn(mock(CustomerRegistrationRequest.class));
     doThrow(new DuplicateCustomerException("customer@mail.com"))
         .when(this.customerRegistrationUseCase)
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
 
     final var customerRequest = createCustomerRequest();
-    final var responseResult = mockMvc.perform(post("/customer")
+    mockMvc.perform(post("/customer")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(customerRequest)))
         .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorCode", is("err-01")))
+        .andExpect(jsonPath("$.message", is("Invalid input data")))
+        .andExpect(jsonPath("$.detail", is("Customer with email 'customer@mail.com' already exists")))
         .andReturn();
 
-    final var responseString = responseResult.getResponse().getContentAsString();
-    final var errorModel = objectMapper.readValue(responseString, ErrorModel.class);
-    assertNotNull(errorModel);
-    assertAll(() -> {
-      assertEquals(VALIDATION_DATA_ERROR.getErrorCode(), errorModel.errorCode());
-      assertEquals(VALIDATION_DATA_ERROR.getErrorMessage(), errorModel.message());
-      assertEquals("Customer with email 'customer@mail.com' already exists",
-          errorModel.detail());
-    });
     verify(this.customerRegistrationUseCase, times(1))
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
     verify(this.customerRegistrationMapper, times(1))
-        .toApplicationModel(any(CustomerRequest.class));
+        .toApplicationModel(any(CustomerCreationApiRequest.class));
     verifyNoMoreInteractions(this.customerRegistrationMapper);
   }
 
   @Test
-  @DisplayName("Test customer rest controller,if invalid data then return a response with bad request response status")
+  @DisplayName("Test customer rest controller, if invalid data then return a response with bad request response status")
   void createCustomer_withInvalidParams_shouldReturnResponseWithBadRequestStatus()
       throws Exception {
-    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerRequest.class)))
+    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerCreationApiRequest.class)))
         .thenReturn(mock(CustomerRegistrationRequest.class));
     final var customerResourceDummy = createCustomerResourceDummy();
     when(this.customerRegistrationMapper.toResourceModel(any(CustomerRegistrationResponse.class)))
@@ -133,25 +125,19 @@ class CustomerRestControllerTest {
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
 
     final var customerRequest = createCustomerRequest();
-    final var responseResult = mockMvc.perform(post("/customer")
+    mockMvc.perform(post("/customer")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(customerRequest)))
         .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorCode", is("err-01")))
+        .andExpect(jsonPath("$.message", is("Invalid input data")))
+        .andExpect(jsonPath("$.detail", is("Email cannot be null")))
         .andReturn();
 
-    final var responseString = responseResult.getResponse().getContentAsString();
-    final var errorModel = objectMapper.readValue(responseString, ErrorModel.class);
-    assertNotNull(errorModel);
-    assertAll(() -> {
-      assertEquals(VALIDATION_DATA_ERROR.getErrorCode(), errorModel.errorCode());
-      assertEquals(VALIDATION_DATA_ERROR.getErrorMessage(), errorModel.message());
-      assertEquals("Email cannot be null",
-          errorModel.detail());
-    });
     verify(this.customerRegistrationUseCase, times(1))
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
     verify(this.customerRegistrationMapper, times(1))
-        .toApplicationModel(any(CustomerRequest.class));
+        .toApplicationModel(any(CustomerCreationApiRequest.class));
     verifyNoMoreInteractions(this.customerRegistrationMapper);
 
   }

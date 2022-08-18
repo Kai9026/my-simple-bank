@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.infrastructure.database.entity;
+package com.github.kai9026.mysimplebank.infrastructure.database.entity.bankaccount;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,39 +12,38 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "bank_accounts")
 @Getter
 @Setter
-public class CustomerEntity {
+public class BankAccountEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(unique = true)
+  private UUID accountCode;
+
+  @Column(unique = true)
+  private String accountNumber;
+
+  @Column(nullable = false)
+  private Float consolidatedBalance;
+
+  @Column(nullable = false)
+  private Float intervalBalance;
+
+  private String alias;
+
+  @Column(nullable = false)
+  private String defaultCurrency;
+
   private UUID customerCode;
 
   @Column(nullable = false)
-  private String firstname;
+  private LocalDate startInterval;
 
   @Column(nullable = false)
-  private String lastname;
+  private LocalDate endInterval;
 
-  @Column(unique = true)
-  private String email;
-
-  @Column(nullable = false)
-  private String street;
-
-  @Column(nullable = false)
-  private String city;
-
-  @Column(nullable = false)
-  private int postalCode;
-
-  @Column(nullable = false)
-  private LocalDate birthdate;
-
-  @Column(nullable = false)
-  private String password;
 }

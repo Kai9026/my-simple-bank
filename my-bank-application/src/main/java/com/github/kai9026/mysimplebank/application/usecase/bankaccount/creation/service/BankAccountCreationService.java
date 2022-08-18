@@ -4,7 +4,7 @@ import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataExc
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.BankAccountCreationUseCase;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.mapper.BankAccountCreationUseCaseMapper;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.model.BankAccountCreationRequest;
-import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.model.BankAccountCreationResponse;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.domain.bankaccount.repository.BankAccountRepository;
 import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class BankAccountCreationService implements BankAccountCreationUseCase {
 
   @Override
   @Transactional
-  public BankAccountCreationResponse createNewBankAccount(BankAccountCreationRequest request) {
+  public BankAccountBaseResponse createNewBankAccount(BankAccountCreationRequest request) {
 
     try {
 
@@ -28,7 +28,7 @@ public class BankAccountCreationService implements BankAccountCreationUseCase {
           this.bankAccountCreationUseCaseMapper.toBankAccount(request);
 
       return this.bankAccountCreationUseCaseMapper
-          .toBankAccountCreateResponse(this.bankAccountRepository.save(newBankAccount));
+          .toBankAccountBaseResponse(this.bankAccountRepository.save(newBankAccount));
 
     } catch (DomainValidationException dvEx) {
       log.error("Invalid input parameters to create new bank account", dvEx);
