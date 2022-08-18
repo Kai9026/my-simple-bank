@@ -75,7 +75,7 @@ class BankAccountDepositIT {
       assertEquals(VALIDATION_DATA_ERROR.getErrorCode(), apiResponse.getBody().errorCode());
       assertEquals(VALIDATION_DATA_ERROR.getErrorMessage(), apiResponse.getBody().message());
       assertEquals(
-          "currency: no debe ser nulo",
+          "currency: must not be null",
           apiResponse.getBody().detail());
     });
   }
