@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.infrastructure.database.repository.impl;
+package com.github.kai9026.mysimplebank.infrastructure.database.repository.customer.impl;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,16 +12,14 @@ import static org.mockito.Mockito.when;
 
 import com.github.kai9026.mysimplebank.domain.customer.Customer;
 import com.github.kai9026.mysimplebank.domain.customer.id.CustomerId;
-import com.github.kai9026.mysimplebank.infrastructure.database.entity.CustomerEntity;
-import com.github.kai9026.mysimplebank.infrastructure.database.mapper.CustomerMapper;
-import com.github.kai9026.mysimplebank.infrastructure.database.repository.CustomerJpaRepository;
+import com.github.kai9026.mysimplebank.infrastructure.database.entity.customer.CustomerEntity;
+import com.github.kai9026.mysimplebank.infrastructure.database.mapper.customer.CustomerMapper;
+import com.github.kai9026.mysimplebank.infrastructure.database.repository.customer.CustomerJpaRepository;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.dummy.CustomerDummyData;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -58,7 +56,7 @@ class CustomerRepositoryImplTest {
   }
 
   @Test
-  @DisplayName("Test check save customer, jpa save method is called")
+  @DisplayName("Test save customer, jpa save method is called")
   void saveCustomer_shouldReturnSavedCustomer() {
     when(this.customerJpaRepository.save(any(CustomerEntity.class)))
         .thenReturn(mock(CustomerEntity.class));

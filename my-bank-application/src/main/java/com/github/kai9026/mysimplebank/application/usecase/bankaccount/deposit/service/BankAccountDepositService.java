@@ -4,7 +4,7 @@ import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataExc
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.BankAccountDepositUseCase;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.mapper.BankAccountDepositUseCaseMapper;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositRequest;
-import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositResponse;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.domain.bankaccount.id.BankAccountId;
 import com.github.kai9026.mysimplebank.domain.bankaccount.repository.BankAccountRepository;
 import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
@@ -21,7 +21,7 @@ public class BankAccountDepositService implements BankAccountDepositUseCase {
 
   @Override
   @Transactional
-  public BankAccountDepositResponse depositIntoAccount(BankAccountDepositRequest request) {
+  public BankAccountBaseResponse depositIntoAccount(BankAccountDepositRequest request) {
 
     try {
 
@@ -37,7 +37,7 @@ public class BankAccountDepositService implements BankAccountDepositUseCase {
       bankAccount.depositMoney(depositAmount, depositCurrency, depositConcept, bankAccount.id());
 
       return this.bankAccountDepositUseCaseMapper
-          .toBankAccountDepositResponse(this.bankAccountRepository.save(bankAccount));
+          .toBankAccountBaseResponse(this.bankAccountRepository.update(bankAccount));
 
     } catch (DomainValidationException dvEx) {
       log.error("Invalid input parameters to deposit into account", dvEx);

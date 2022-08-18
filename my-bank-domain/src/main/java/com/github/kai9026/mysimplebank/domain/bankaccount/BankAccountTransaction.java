@@ -19,21 +19,23 @@ public class BankAccountTransaction extends Entity<BankAccountTransactionId> {
   private final Money transactionAmount;
   private final String transactionConcept;
   private final LocalDate transactionDate;
+  private final boolean newTransaction;
 
   private BankAccountTransaction(final BankAccountTransactionId id, final BankAccountId originAccountId,
       final BankAccountId targetAccountId, final Money amount, final String concept,
-      final LocalDate transactionDate) {
+      final LocalDate transactionDate, final boolean isNewTransaction) {
     super(id);
     this.originBankAccountId = originAccountId;
     this.targetBankAccountId = targetAccountId;
     this.transactionAmount = amount;
     this.transactionConcept = concept;
     this.transactionDate = transactionDate;
+    this.newTransaction = isNewTransaction;
   }
 
   public static BankAccountTransaction createTransactionWith(final UUID transactionId,
       final BankAccountId originAccount,final BankAccountId targetAccount,  final Money amount,
-      final String concept) {
+      final String concept, final boolean isNewTransaction) {
     if (isEmptyField(concept)) {
       throw new DomainValidationException("Transaction concept cannot be null");
     }
@@ -46,7 +48,7 @@ public class BankAccountTransaction extends Entity<BankAccountTransactionId> {
         BankAccountTransactionId.fromId(transactionId);
 
     return new BankAccountTransaction(bankAccountTransactionId, originAccount, targetAccount, amount,
-        concept, transactionDate);
+        concept, transactionDate, isNewTransaction);
   }
 
   public BankAccountId originAccountCode() {
@@ -67,6 +69,10 @@ public class BankAccountTransaction extends Entity<BankAccountTransactionId> {
 
   public LocalDate transactionDate() {
     return this.transactionDate;
+  }
+
+  public boolean newTransaction() {
+    return this.newTransaction;
   }
 
 }

@@ -1,5 +1,6 @@
 package com.github.kai9026.mysimplebank.domain.bankaccount;
 
+import static com.github.kai9026.mysimplebank.domain.bankaccount.Money.CURRENCY_EUR_MONEY;
 import static com.github.kai9026.mysimplebank.domain.shared.RequiredFieldValidator.isEmptyField;
 import static java.util.Objects.isNull;
 
@@ -15,30 +16,28 @@ import java.util.UUID;
 public class BankAccount extends AggregateRoot<BankAccountId> {
 
   private static final long serialVersionUID = -4350072396686438571L;
-  private static final String DEFAULT_CURRENCY = "EUR";
-  private static final Double DEFAULT_AMOUNT = 0.00;
-
   private static final int MONTHS_PERIOD_DURATION = 6;
 
   private final BankAccountNumber bankAccountNumber;
-  private Money balanceTotalAccount;
+  private Money consolidatedBalance;
+  private Money intervalBalance;
   private String accountAlias;
-
-  private String defaultCurrency;
+  private final String defaultCurrency;
   private final CustomerId customerCode;
   private final LocalDate startIntervalDate;
   private final LocalDate closeIntervalDate;
   private List<BankAccountTransaction> transactionsInInterval;
 
   private BankAccount(final BankAccountId bankAccountId, final String alias,
-      final Money balance, final String currency, final CustomerId customerCode,
-      final LocalDate startIntervalDate) {
+      final BankAccountNumber accountNumber, final Money balance, final String currency,
+      final CustomerId customerCode, final LocalDate startIntervalDate) {
     super(bankAccountId);
     this.accountAlias = alias;
     this.customerCode = customerCode;
-    this.balanceTotalAccount = balance;
+    this.intervalBalance = balance;
+    this.consolidatedBalance = Money.of(Money.ZERO_MONEY, currency);
     this.defaultCurrency = currency;
-    this.bankAccountNumber = BankAccountNumber.generate();
+    this.bankAccountNumber = accountNumber;
     this.startIntervalDate = startIntervalDate == null ? LocalDate.now() : startIntervalDate;
     this.closeIntervalDate = this.startIntervalDate.plusMonths(MONTHS_PERIOD_DURATION);
     this.transactionsInInterval = new ArrayList<>();
@@ -55,16 +54,31 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
 
     final var bankAccountId = BankAccountId.fromId(accountId);
     final var customerId = CustomerId.fromId(customerCode);
-    final var balance = Money.of(DEFAULT_AMOUNT, currency);
-    return new BankAccount(bankAccountId, alias, balance, currency, customerId, openIntervalDate);
+    final var balance = Money.of(Money.ZERO_MONEY, currency);
+    final var accountNumber = BankAccountNumber.generate();
+    return new BankAccount(bankAccountId, alias, accountNumber, balance, currency, customerId,
+        openIntervalDate);
   }
 
   public static BankAccount initAccountWithTransactions(final String alias,
-      final String currency, final UUID accountId, final UUID customerCode,
-      final LocalDate openIntervalDate, final List<BankAccountTransaction> transactions) {
+      final String accountNumber, final String currency, final UUID accountId,
+      final UUID customerCode,
+      final LocalDate openIntervalDate, final double consolidatedBalance,
+      final List<BankAccountTransaction> transactions) {
+    if (isEmptyField(currency)) {
+      throw new DomainValidationException("Currency cannot be null");
+    }
+    if (isNull(customerCode)) {
+      throw new DomainValidationException("Customer code is required");
+    }
 
-    final var bankAccount = initAccountWith(alias, currency, accountId, customerCode,
-        openIntervalDate);
+    final var bankAccountId = BankAccountId.fromId(accountId);
+    final var bankAccountNumber = BankAccountNumber.fromString(accountNumber);
+    final var customerId = CustomerId.fromId(customerCode);
+    final var bankAccount = new BankAccount(bankAccountId, alias, bankAccountNumber,
+        Money.of(Money.ZERO_MONEY, currency),
+        currency, customerId, openIntervalDate);
+    bankAccount.updateConsolidatedBalanceTo(consolidatedBalance);
     bankAccount.addTransactions(transactions);
     bankAccount.calculateBalance();
     return bankAccount;
@@ -75,7 +89,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   }
 
   public Money accountBalance() {
-    return this.balanceTotalAccount;
+    return this.consolidatedBalance.sum(this.intervalBalance);
   }
 
   public String aliasAccount() {
@@ -102,12 +116,29 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     return this.defaultCurrency;
   }
 
+  public Money intervalBalance() {
+    return this.intervalBalance;
+  }
+
+  public Money consolidatedBalance() {
+    return this.consolidatedBalance;
+  }
+
   private void addTransactions(final List<BankAccountTransaction> transactions) {
     transactionsInInterval.addAll(transactions);
   }
 
   public void changeAliasAccount(final String newAliasAccount) {
     this.accountAlias = newAliasAccount;
+  }
+
+  private void updateConsolidatedBalanceTo(final double amount) {
+    this.consolidatedBalance = Money.of(amount, this.defaultCurrency);
+  }
+
+  public void closeCurrentInterval() {
+    this.consolidatedBalance = this.consolidatedBalance.sum(this.intervalBalance);
+    this.intervalBalance = Money.of(Money.ZERO_MONEY, this.defaultCurrency);
   }
 
   public void depositMoney(final double moneyAmount, final String currency,
@@ -119,7 +150,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     final var transaction =
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(), originAccountId,
             this.id(),
-            Money.of(moneyAmount, currency), concept);
+            Money.of(moneyAmount, currency), concept, true);
     this.transactionsInInterval.add(transaction);
     this.calculateBalance();
   }
@@ -128,18 +159,18 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     final var positiveBalance = this.transactionsInInterval.stream()
         .filter(tx -> tx.targetAccountCode().equals(this.id()))
         .map(BankAccountTransaction::transactionAmount)
-        .reduce(Money::sum).orElse(Money.of(DEFAULT_AMOUNT, DEFAULT_CURRENCY));
+        .reduce(Money::sum).orElse(Money.of(Money.ZERO_MONEY, CURRENCY_EUR_MONEY));
 
     final var negativeBalance = this.transactionsInInterval.stream()
         .filter(tx -> tx.originAccountCode().equals(this.id()) &&
             !tx.targetAccountCode().equals(this.id()))
         .map(BankAccountTransaction::transactionAmount)
-        .reduce(Money::sum).orElse(Money.of(DEFAULT_AMOUNT, DEFAULT_CURRENCY));
+        .reduce(Money::sum).orElse(Money.of(Money.ZERO_MONEY, CURRENCY_EUR_MONEY));
 
     final var totalMoney = positiveBalance.subtract(negativeBalance);
     if (!totalMoney.isPositiveOrZero()) {
       throw new DomainValidationException("Balance account cannot be lower than zero");
     }
-    this.balanceTotalAccount = totalMoney;
+    this.intervalBalance = totalMoney;
   }
 }

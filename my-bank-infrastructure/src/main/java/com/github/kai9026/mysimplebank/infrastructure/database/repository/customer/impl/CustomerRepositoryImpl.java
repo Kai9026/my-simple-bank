@@ -1,10 +1,10 @@
-package com.github.kai9026.mysimplebank.infrastructure.database.repository.impl;
+package com.github.kai9026.mysimplebank.infrastructure.database.repository.customer.impl;
 
 import com.github.kai9026.mysimplebank.domain.customer.Customer;
 import com.github.kai9026.mysimplebank.domain.customer.id.CustomerId;
 import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;
-import com.github.kai9026.mysimplebank.infrastructure.database.mapper.CustomerMapper;
-import com.github.kai9026.mysimplebank.infrastructure.database.repository.CustomerJpaRepository;
+import com.github.kai9026.mysimplebank.infrastructure.database.mapper.customer.CustomerMapper;
+import com.github.kai9026.mysimplebank.infrastructure.database.repository.customer.CustomerJpaRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 

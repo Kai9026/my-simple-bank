@@ -22,44 +22,51 @@ public class BankAccountDummyData {
     List<BankAccountTransaction> transactions = List.of(
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
             BankAccountId.fromId(accountId), BankAccountId.fromId(UUID.randomUUID()),
-            Money.of(10.00, "EUR"), "Bizum"),
+            Money.of(10.00, "EUR"), "Bizum", true),
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
             BankAccountId.fromId(accountId), BankAccountId.fromId(accountId),
-            Money.of(15.00, "EUR"), "Deposit"),
+            Money.of(15.00, "EUR"), "Deposit", true),
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
             BankAccountId.fromId(UUID.randomUUID()), BankAccountId.fromId(accountId),
-            Money.of(100.00, "EUR"), "PC")
+            Money.of(100.00, "EUR"), "PC", true)
     );
 
-    return BankAccount.initAccountWithTransactions(VALID_DATA.aliasAccount, VALID_DATA.defaultCurrency,
+    return BankAccount.initAccountWithTransactions(VALID_DATA.aliasAccount,
+        VALID_DATA.getBankAccountNumber(), VALID_DATA.defaultCurrency,
         accountId, VALID_DATA.customerCode, VALID_DATA.startIntervalDate.minusDays(1),
-        transactions);
+        VALID_DATA.getConsolidatedBalance(), transactions);
   }
 
 
   public enum DummyData {
-    VALID_DATA(UUID.randomUUID(), "Save account", UUID.randomUUID(), "EUR",
-        LocalDate.now()),
-    OTHER_VALID_DATA(UUID.randomUUID(), "Invest account", UUID.randomUUID(), "EUR",
-        LocalDate.now()),
-    INVALID_DATA_NULL_CURRENCY(UUID.randomUUID(), "Invest account", UUID.randomUUID(), null,
-        LocalDate.now()),
-    INVALID_DATA_NULL_CUSTOMER(UUID.randomUUID(), "Invest account",null, "EUR",
-        LocalDate.now());
+    VALID_DATA(UUID.randomUUID(), "Save account", "number", UUID.randomUUID(), "EUR",
+        LocalDate.now(), 0.00),
+    OTHER_VALID_DATA(UUID.randomUUID(), "Invest account", "number", UUID.randomUUID(), "EUR",
+        LocalDate.now(), 0.00),
+    INVALID_DATA_NULL_CURRENCY(UUID.randomUUID(), "Invest account", "number", UUID.randomUUID(),
+        null,
+        LocalDate.now(), 0.00),
+    INVALID_DATA_NULL_CUSTOMER(UUID.randomUUID(), "Invest account", "number", null, "EUR",
+        LocalDate.now(), 0.00);
 
     private final UUID bankAccountId;
+    private final String bankAccountNumber;
     private final String aliasAccount;
     private final String defaultCurrency;
     private final UUID customerCode;
     private final LocalDate startIntervalDate;
+    private final double consolidatedBalance;
 
-    DummyData(final UUID bankAccountId, final String aliasAccount,
-        final UUID customerCode, final String defaultCurrency, final LocalDate startIntervalDate) {
+    DummyData(final UUID bankAccountId, final String aliasAccount, final String accountNumber,
+        final UUID customerCode, final String defaultCurrency, final LocalDate startIntervalDate,
+        final double consolidatedBalance) {
       this.bankAccountId = bankAccountId;
       this.aliasAccount = aliasAccount;
+      this.bankAccountNumber = accountNumber;
       this.customerCode = customerCode;
       this.defaultCurrency = defaultCurrency;
       this.startIntervalDate = startIntervalDate;
+      this.consolidatedBalance = consolidatedBalance;
     }
 
     public UUID getBankAccountId() {
@@ -68,6 +75,10 @@ public class BankAccountDummyData {
 
     public String getAliasAccount() {
       return aliasAccount;
+    }
+
+    public String getBankAccountNumber() {
+      return bankAccountNumber;
     }
 
     public UUID getCustomerCode() {
@@ -82,5 +93,8 @@ public class BankAccountDummyData {
       return startIntervalDate;
     }
 
+    public double getConsolidatedBalance() {
+      return consolidatedBalance;
+    }
   }
 }

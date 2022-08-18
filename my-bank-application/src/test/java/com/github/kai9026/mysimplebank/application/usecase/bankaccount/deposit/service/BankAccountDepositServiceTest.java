@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 import com.github.kai9026.mysimplebank.application.exception.InvalidInputDataException;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.mapper.BankAccountDepositUseCaseMapper;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositRequest;
-import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositResponse;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.domain.bankaccount.BankAccount;
 import com.github.kai9026.mysimplebank.domain.bankaccount.id.BankAccountId;
 import com.github.kai9026.mysimplebank.domain.bankaccount.repository.BankAccountRepository;
@@ -82,28 +82,30 @@ class BankAccountDepositServiceTest {
   void depositIntoBankAccount_withValidParams_shouldDoDepositIntoAccount() {
     when(this.bankAccountRepository.findById(any(BankAccountId.class)))
         .thenReturn(Optional.of(mock(BankAccount.class)));
-    when(this.bankAccountRepository.save(any(BankAccount.class)))
+    when(this.bankAccountRepository.update(any(BankAccount.class)))
         .thenReturn(mock(BankAccount.class));
-    when(this.bankAccountDepositUseCaseMapper.toBankAccountDepositResponse(any(BankAccount.class)))
-        .thenReturn(dummyBankAccountDepositResponse());
+    when(this.bankAccountDepositUseCaseMapper.toBankAccountBaseResponse(any(BankAccount.class)))
+        .thenReturn(dummyBankAccountBaseResponse());
 
     final var request =
         new BankAccountDepositRequest(10.00, "EUR", UUID.randomUUID(), "Savings");
-    final var bankAccountDepositResponse = this.bankAccountDepositService.depositIntoAccount(
-        request);
+    final var bankAccountDepositResponse =
+        this.bankAccountDepositService.depositIntoAccount(request);
 
     assertNotNull(bankAccountDepositResponse);
     verify(this.bankAccountRepository, times(1))
         .findById(any(BankAccountId.class));
     verify(this.bankAccountRepository, times(1))
-        .save(any(BankAccount.class));
+        .update(any(BankAccount.class));
     verify(this.bankAccountDepositUseCaseMapper, times(1))
-        .toBankAccountDepositResponse(any(BankAccount.class));
+        .toBankAccountBaseResponse(any(BankAccount.class));
 
   }
 
-  private BankAccountDepositResponse dummyBankAccountDepositResponse() {
-    return new BankAccountDepositResponse("number", 0.00, "alias", "EUR", UUID.randomUUID());
+  private BankAccountBaseResponse dummyBankAccountBaseResponse() {
+    return new BankAccountBaseResponse(
+        UUID.randomUUID(), "number", 0.00, "alias",
+        "EUR", UUID.randomUUID());
   }
 
   private Optional<BankAccount> dummyBankAccount() {

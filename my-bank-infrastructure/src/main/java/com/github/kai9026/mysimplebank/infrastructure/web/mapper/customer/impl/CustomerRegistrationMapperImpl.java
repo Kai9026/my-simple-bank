@@ -1,4 +1,4 @@
-package com.github.kai9026.mysimplebank.infrastructure.web.mapper.impl;
+package com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.impl;
 
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerAddress;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerFullName;
@@ -6,14 +6,14 @@ import com.github.kai9026.mysimplebank.application.usecase.customer.registration
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationResponse;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerAddressDTO;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerNameDTO;
-import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerRequest;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.CustomerRegistrationMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationMapper;
 
 public class CustomerRegistrationMapperImpl implements CustomerRegistrationMapper {
 
   @Override
-  public CustomerRegistrationRequest toApplicationModel(CustomerRequest request) {
+  public CustomerRegistrationRequest toApplicationModel(CustomerCreationApiRequest request) {
     final var fullName =
         new CustomerFullName(request.getName().getFirstName(), request.getName().getLastName());
     final var address =

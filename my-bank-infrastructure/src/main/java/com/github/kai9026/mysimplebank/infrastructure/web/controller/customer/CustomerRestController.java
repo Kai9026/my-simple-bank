@@ -3,9 +3,9 @@ package com.github.kai9026.mysimplebank.infrastructure.web.controller.customer;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
-import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerRequest;
+import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.CustomerRegistrationMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class CustomerRestController {
 
   @PostMapping
   public ResponseEntity<CustomerResource> createCustomer(
-      @RequestBody @Validated final CustomerRequest request) {
+      @RequestBody @Validated final CustomerCreationApiRequest request) {
 
     final var customerRegistrationRequest =
         this.customerRegistrationMapper.toApplicationModel(request);
