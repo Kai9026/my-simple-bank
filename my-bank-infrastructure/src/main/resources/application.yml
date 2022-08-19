@@ -13,3 +13,6 @@ spring:
     username: user
     password: changeit
     driverClassName: org.h2.Driver
+springdoc:
+  swagger-ui:
+    path: /api-doc.html

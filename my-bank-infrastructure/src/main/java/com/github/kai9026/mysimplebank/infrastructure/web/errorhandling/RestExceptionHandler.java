@@ -8,15 +8,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
 
   @ExceptionHandler({InvalidInputDataException.class, DuplicateCustomerException.class})
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<ErrorModel> handleInvalidInputData(RuntimeException ex) {
     final var errorCode = ErrorCodeEnum.VALIDATION_DATA_ERROR;
     final var responseErrorModel =
@@ -26,6 +29,7 @@ public class RestExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<ErrorModel> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
     final var errors = ex.getBindingResult().getFieldErrors().stream()
         .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -38,6 +42,7 @@ public class RestExceptionHandler {
   }
 
   @ExceptionHandler(DataAccessException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ResponseEntity<ErrorModel> handleDataAccess(DataAccessException ex) {
     final var errorCode = ErrorCodeEnum.DATABASE_OPERATION_ERROR;
     final var responseErrorModel =
