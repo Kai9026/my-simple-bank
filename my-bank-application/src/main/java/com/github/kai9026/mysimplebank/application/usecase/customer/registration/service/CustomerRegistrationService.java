@@ -25,7 +25,7 @@ public class CustomerRegistrationService implements CustomerRegistrationUseCase 
   @Transactional
   public CustomerRegistrationResponse registerNewCustomer(CustomerRegistrationRequest request) {
 
-    final var customerEmail = request.getEmail();
+    final var customerEmail = request.customerEmail();
 
     try {
       final var customerAlreadyExists = customerRepository.checkDuplicatedUserByEmail(

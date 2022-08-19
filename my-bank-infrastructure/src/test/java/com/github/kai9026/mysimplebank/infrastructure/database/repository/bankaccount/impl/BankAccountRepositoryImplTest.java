@@ -71,8 +71,8 @@ class BankAccountRepositoryImplTest {
   void getBankAccountById_shouldReturnBankAccountAggregate() {
     when(this.bankAccountJpaRepository.findByAccountCode(any(UUID.class)))
         .thenReturn(Optional.of(mock(BankAccountEntity.class)));
-    when(this.bankAccountTransactionJpaRepository.findByOriginAccountCodeOrTargetAccountCode(
-        any(UUID.class), any(UUID.class)))
+    when(this.bankAccountTransactionJpaRepository.findByDiscriminatorAccountCode(
+        any(UUID.class)))
         .thenReturn(List.of(mock(BankAccountTransactionEntity.class)));
     when(this.bankAccountTransactionMapper.toBankAccountTransaction(
         any(BankAccountTransactionEntity.class)))
@@ -87,7 +87,7 @@ class BankAccountRepositoryImplTest {
     verify(this.bankAccountJpaRepository, times(1))
         .findByAccountCode(any(UUID.class));
     verify(this.bankAccountTransactionJpaRepository, times(1))
-        .findByOriginAccountCodeOrTargetAccountCode(any(UUID.class), any(UUID.class));
+        .findByDiscriminatorAccountCode(any(UUID.class));
     verify(this.bankAccountTransactionMapper, times(1))
         .toBankAccountTransaction(any(BankAccountTransactionEntity.class));
     verify(this.bankAccountMapper, times(1))
@@ -102,7 +102,7 @@ class BankAccountRepositoryImplTest {
     when(this.bankAccountJpaRepository.save(any(BankAccountEntity.class)))
         .thenReturn(mock(BankAccountEntity.class));
     when(this.bankAccountTransactionMapper.toBankAccountTransactionEntity(
-        any(BankAccountTransaction.class)))
+        any(BankAccountTransaction.class), any(UUID.class)))
         .thenReturn(mock(BankAccountTransactionEntity.class));
     when(this.bankAccountTransactionJpaRepository.save(any(BankAccountTransactionEntity.class)))
         .thenReturn(mock(BankAccountTransactionEntity.class));
@@ -116,7 +116,7 @@ class BankAccountRepositoryImplTest {
     verify(this.bankAccountJpaRepository, times(1))
         .save(any(BankAccountEntity.class));
     verify(this.bankAccountTransactionMapper, times(1))
-        .toBankAccountTransactionEntity(any(BankAccountTransaction.class));
+        .toBankAccountTransactionEntity(any(BankAccountTransaction.class), any(UUID.class));
     verify(this.bankAccountTransactionJpaRepository, times(1))
         .save(any(BankAccountTransactionEntity.class));
   }

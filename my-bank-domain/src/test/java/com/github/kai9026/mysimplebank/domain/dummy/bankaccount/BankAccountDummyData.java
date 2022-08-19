@@ -17,7 +17,7 @@ public class BankAccountDummyData {
         dummyData.bankAccountId, dummyData.customerCode, dummyData.startIntervalDate);
   }
 
-  public static BankAccount createBankAccountWithValidTransactions() {
+  public static BankAccount createBankAccountWithThreeValidTransactions() {
     final var accountId = UUID.randomUUID();
     List<BankAccountTransaction> transactions = List.of(
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
@@ -42,7 +42,7 @@ public class BankAccountDummyData {
     VALID_DATA(UUID.randomUUID(), "Save account", "number", UUID.randomUUID(), "EUR",
         LocalDate.now(), 0.00),
     OTHER_VALID_DATA(UUID.randomUUID(), "Invest account", "number", UUID.randomUUID(), "EUR",
-        LocalDate.now(), 0.00),
+        LocalDate.now(), 10.00),
     INVALID_DATA_NULL_CURRENCY(UUID.randomUUID(), "Invest account", "number", UUID.randomUUID(),
         null,
         LocalDate.now(), 0.00),

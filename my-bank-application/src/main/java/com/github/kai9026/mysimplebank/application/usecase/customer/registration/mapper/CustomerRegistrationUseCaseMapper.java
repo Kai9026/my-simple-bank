@@ -14,12 +14,12 @@ public final class CustomerRegistrationUseCaseMapper {
   public static Customer fromCustomerRegistrationRequest(final CustomerRegistrationRequest request) {
     return new Customer.Builder()
         .id(UUID.randomUUID())
-        .fullName(request.getFullName().getFirstName(), request.getFullName().getLastName())
-        .streetAddress(request.getAddress().getStreet(), request.getAddress().getPostalCode(),
-            request.getAddress().getCity())
-        .emailAddress(request.getEmail())
-        .birthDate(request.getBirthDate())
-        .password(request.getCustomerPassword())
+        .fullName(request.fullName().getFirstName(), request.fullName().getLastName())
+        .streetAddress(request.address().getStreet(), request.address().getPostalCode(),
+            request.address().getCity())
+        .emailAddress(request.customerEmail())
+        .birthDate(request.customerBirthDate())
+        .password(request.customerPassword())
         .build();
   }
 

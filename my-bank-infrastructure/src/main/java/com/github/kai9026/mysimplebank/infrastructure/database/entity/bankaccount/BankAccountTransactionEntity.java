@@ -25,6 +25,9 @@ public class BankAccountTransactionEntity {
   private UUID transactionCode;
 
   @Column(nullable = false)
+  private UUID discriminatorAccountCode;
+
+  @Column(nullable = false)
   private UUID originAccountCode;
 
   @Column(nullable = false)

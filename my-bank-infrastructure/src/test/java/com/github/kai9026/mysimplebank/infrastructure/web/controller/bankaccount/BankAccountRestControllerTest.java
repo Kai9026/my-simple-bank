@@ -25,7 +25,7 @@ import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.B
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositRequest;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.RestExceptionHandler;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountResourceMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountApiMapper;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class BankAccountRestControllerTest {
   private BankAccountDepositUseCase bankAccountDepositUseCase;
 
   @MockBean
-  private BankAccountResourceMapper bankAccountResourceMapper;
+  private BankAccountApiMapper bankAccountApiMapper;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -65,7 +65,7 @@ class BankAccountRestControllerTest {
         .thenReturn(bankAccountBaseResponse);
 
     final var bankAccountResourceDummy = createBankAccountResourceDummy();
-    when(this.bankAccountResourceMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
+    when(this.bankAccountApiMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
         .thenReturn(bankAccountResourceDummy);
 
     final var bankAccountCreationRequest = createBankAccountCreationRequest();
@@ -78,7 +78,7 @@ class BankAccountRestControllerTest {
 
     verify(this.bankAccountCreationUseCase, times(1))
         .createNewBankAccount(any(BankAccountCreationRequest.class));
-    verify(this.bankAccountResourceMapper, times(1))
+    verify(this.bankAccountApiMapper, times(1))
         .toBankAccountResource(any(BankAccountBaseResponse.class));
 
   }
@@ -99,7 +99,7 @@ class BankAccountRestControllerTest {
         .andReturn();
 
     verifyNoInteractions(this.bankAccountCreationUseCase);
-    verifyNoInteractions(this.bankAccountResourceMapper);
+    verifyNoInteractions(this.bankAccountApiMapper);
   }
 
   @Test
@@ -111,7 +111,7 @@ class BankAccountRestControllerTest {
     when(this.bankAccountDepositUseCase.depositIntoAccount(any(BankAccountDepositRequest.class)))
         .thenReturn(bankAccountBaseResponse);
     final var bankAccountResourceDummy = createBankAccountResourceDummy();
-    when(this.bankAccountResourceMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
+    when(this.bankAccountApiMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
         .thenReturn(bankAccountResourceDummy);
 
     final var bankAccountDepositRequest = createBankAccountDepositRequest();
@@ -125,7 +125,7 @@ class BankAccountRestControllerTest {
 
     verify(this.bankAccountDepositUseCase, times(1))
         .depositIntoAccount(any(BankAccountDepositRequest.class));
-    verify(this.bankAccountResourceMapper, times(1))
+    verify(this.bankAccountApiMapper, times(1))
         .toBankAccountResource(any(BankAccountBaseResponse.class));
   }
 
@@ -150,7 +150,7 @@ class BankAccountRestControllerTest {
 
     verify(this.bankAccountDepositUseCase, times(1))
         .depositIntoAccount(any(BankAccountDepositRequest.class));
-    verifyNoInteractions(this.bankAccountResourceMapper);
+    verifyNoInteractions(this.bankAccountApiMapper);
   }
 
   @Test
@@ -170,7 +170,7 @@ class BankAccountRestControllerTest {
         .andReturn();
 
     verifyNoInteractions(this.bankAccountDepositUseCase);
-    verifyNoInteractions(this.bankAccountResourceMapper);
+    verifyNoInteractions(this.bankAccountApiMapper);
   }
 
 }

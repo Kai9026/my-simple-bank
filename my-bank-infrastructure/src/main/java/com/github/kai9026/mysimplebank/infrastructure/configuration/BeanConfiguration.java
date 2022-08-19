@@ -10,6 +10,8 @@ import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.m
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.service.BankAccountDepositService;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.service.CustomerRegistrationService;
+import com.github.kai9026.mysimplebank.application.usecase.transfermoney.TransferMoneyUseCase;
+import com.github.kai9026.mysimplebank.application.usecase.transfermoney.service.TransferMoneyService;
 import com.github.kai9026.mysimplebank.domain.bankaccount.repository.BankAccountRepository;
 import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;
 import com.github.kai9026.mysimplebank.infrastructure.database.mapper.bankaccount.BankAccountMapper;
@@ -23,10 +25,12 @@ import com.github.kai9026.mysimplebank.infrastructure.database.repository.bankac
 import com.github.kai9026.mysimplebank.infrastructure.database.repository.bankaccount.impl.BankAccountRepositoryImpl;
 import com.github.kai9026.mysimplebank.infrastructure.database.repository.customer.CustomerJpaRepository;
 import com.github.kai9026.mysimplebank.infrastructure.database.repository.customer.impl.CustomerRepositoryImpl;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountResourceMapper;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountResourceMapperImpl;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationMapper;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.impl.CustomerRegistrationMapperImpl;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountApiMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.impl.BankAccountApiMapperImpl;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationApiMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.impl.CustomerRegistrationApiMapperImpl;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.moneytransfer.MoneyTransferApiMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.moneytransfer.impl.MoneyTransferApiMapperImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,8 +54,8 @@ public class BeanConfiguration {
   }
 
   @Bean
-  public CustomerRegistrationMapper customerRegistrationMapper() {
-    return new CustomerRegistrationMapperImpl();
+  public CustomerRegistrationApiMapper customerRegistrationMapper() {
+    return new CustomerRegistrationApiMapperImpl();
   }
 
   @Bean
@@ -79,8 +83,8 @@ public class BeanConfiguration {
   }
 
   @Bean
-  public BankAccountResourceMapper bankAccountResourceMapper() {
-    return new BankAccountResourceMapperImpl();
+  public BankAccountApiMapper bankAccountResourceMapper() {
+    return new BankAccountApiMapperImpl();
   }
 
   @Bean
@@ -103,6 +107,16 @@ public class BeanConfiguration {
   @Bean
   public BankAccountTransactionMapper bankAccountTransactionMapper() {
     return new BankAccountTransactionMapperImpl();
+  }
+
+  @Bean
+  public TransferMoneyUseCase transferMoneyUseCase(final BankAccountRepository bankAccountRepository) {
+    return new TransferMoneyService(bankAccountRepository);
+  }
+
+  @Bean
+  public MoneyTransferApiMapper moneyTransferApiMapper() {
+    return new MoneyTransferApiMapperImpl();
   }
 
 }

@@ -30,9 +30,11 @@ ALTER TABLE bank_accounts
   ADD FOREIGN KEY (customer_code)
   REFERENCES customers(customer_code);
 
+--Rethink solution about this
 CREATE TABLE transactions (
    id INTEGER NOT NULL AUTO_INCREMENT,
    transaction_code UUID NOT NULL,
+   discriminator_account_code UUID NOT NULL,
    origin_account_code UUID NOT NULL,
    target_account_code UUID NOT NULL,
    amount FLOAT NOT NULL,

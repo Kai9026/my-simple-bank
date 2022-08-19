@@ -31,7 +31,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
   public Optional<BankAccount> findById(BankAccountId bankAccountId) {
     final var bankAccount = bankAccountJpaRepository.findByAccountCode(bankAccountId.id());
     final var bankAccountTransactions = bankAccountTransactionJpaRepository
-        .findByOriginAccountCodeOrTargetAccountCode(bankAccountId.id(), bankAccountId.id())
+        .findByDiscriminatorAccountCode(bankAccountId.id())
         .stream().map(bankAccountTransactionMapper::toBankAccountTransaction)
         .toList();
 
@@ -52,7 +52,8 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 
     bankAccount.activeTransactions().stream()
         .filter(BankAccountTransaction::newTransaction)
-        .map(this.bankAccountTransactionMapper::toBankAccountTransactionEntity)
+        .map(bankTx -> this.bankAccountTransactionMapper
+            .toBankAccountTransactionEntity(bankTx, bankAccount.id().id()))
         .forEach(this.bankAccountTransactionJpaRepository::save);
 
     return bankAccount;

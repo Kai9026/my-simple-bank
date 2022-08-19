@@ -8,9 +8,9 @@ import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.mo
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerNameDTO;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationApiMapper;
 
-public class CustomerRegistrationMapperImpl implements CustomerRegistrationMapper {
+public class CustomerRegistrationApiMapperImpl implements CustomerRegistrationApiMapper {
 
   @Override
   public CustomerRegistrationRequest toApplicationModel(CustomerCreationApiRequest request) {

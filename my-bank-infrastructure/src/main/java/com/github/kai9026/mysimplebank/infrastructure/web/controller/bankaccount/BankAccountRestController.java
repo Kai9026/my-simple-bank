@@ -10,7 +10,7 @@ import com.github.kai9026.mysimplebank.infrastructure.web.controller.bankaccount
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.bankaccount.model.BankAccountCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.bankaccount.model.BankAccountResource;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.CustomerRestController;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountResourceMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountApiMapper;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class BankAccountRestController {
 
   private final BankAccountCreationUseCase bankAccountCreationUseCase;
-  private final BankAccountResourceMapper bankAccountResourceMapper;
+  private final BankAccountApiMapper bankAccountApiMapper;
   private final BankAccountDepositUseCase bankAccountDepositUseCase;
 
   @PostMapping
   public ResponseEntity<BankAccountResource> createBankAccount(
       @RequestBody @Validated final BankAccountCreationApiRequest request) {
+    log.info(">> Create bank account with request: {}", request);
 
     final var bankAccountCreationRequest =
         new BankAccountCreationRequest(request.alias(), request.currency(),
@@ -43,7 +44,7 @@ public class BankAccountRestController {
         this.bankAccountCreationUseCase.createNewBankAccount(bankAccountCreationRequest);
 
     final var bankAccountResource =
-        this.bankAccountResourceMapper.toBankAccountResource(bankAccountCreationResponse);
+        this.bankAccountApiMapper.toBankAccountResource(bankAccountCreationResponse);
     final var bankAccountLink = linkTo(BankAccountRestController.class)
         .slash(bankAccountCreationResponse.bankAccountCode())
         .withSelfRel();
@@ -60,6 +61,7 @@ public class BankAccountRestController {
   public ResponseEntity<BankAccountResource> depositToAccount(
       @PathVariable UUID accountCode,
       @RequestBody @Validated final BankAccountDepositApiRequest request) {
+    log.info(">> Deposit into bank account with request: {}", request);
 
     final var bankAccountDepositRequest =
         new BankAccountDepositRequest(request.depositAmount(), request.currency(), accountCode,
@@ -68,7 +70,7 @@ public class BankAccountRestController {
         this.bankAccountDepositUseCase.depositIntoAccount(bankAccountDepositRequest);
 
     final var bankAccountResource =
-        this.bankAccountResourceMapper.toBankAccountResource(bankAccountDepositResponse);
+        this.bankAccountApiMapper.toBankAccountResource(bankAccountDepositResponse);
     final var bankAccountLink = linkTo(BankAccountRestController.class)
         .slash(bankAccountDepositResponse.bankAccountCode())
         .withSelfRel();
