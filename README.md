@@ -18,7 +18,7 @@ You can run the application executing the following command
 ```
 mvn clean spring-boot:run -f my-bank-infrastructure/pom.xml
 ```
-Also, you can execute your application directly from the IDE
+Also, you can execute the application directly from the IDE
 of your preference.
 
 ## Testing the API
