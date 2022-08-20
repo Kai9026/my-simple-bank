@@ -5,14 +5,16 @@ import com.github.kai9026.mysimplebank.domain.bankaccount.Money;
 import com.github.kai9026.mysimplebank.domain.bankaccount.id.BankAccountId;
 import com.github.kai9026.mysimplebank.infrastructure.database.entity.bankaccount.BankAccountTransactionEntity;
 import com.github.kai9026.mysimplebank.infrastructure.database.mapper.bankaccount.BankAccountTransactionMapper;
+import java.util.UUID;
 
 public class BankAccountTransactionMapperImpl implements BankAccountTransactionMapper {
 
   @Override
   public BankAccountTransactionEntity toBankAccountTransactionEntity(
-      BankAccountTransaction bankAccountTransaction) {
+      final BankAccountTransaction bankAccountTransaction, final UUID discriminatorAccountCode) {
     final var bankAccountTransactionEntity = new BankAccountTransactionEntity();
     bankAccountTransactionEntity.setTransactionCode(bankAccountTransaction.id().id());
+    bankAccountTransactionEntity.setDiscriminatorAccountCode(discriminatorAccountCode);
     bankAccountTransactionEntity.setOriginAccountCode(
         bankAccountTransaction.originAccountCode().id());
     bankAccountTransactionEntity.setTargetAccountCode(
@@ -27,7 +29,7 @@ public class BankAccountTransactionMapperImpl implements BankAccountTransactionM
 
   @Override
   public BankAccountTransaction toBankAccountTransaction(
-      BankAccountTransactionEntity bankAccountTransactionEntity) {
+      final BankAccountTransactionEntity bankAccountTransactionEntity) {
     final var originAccountCode =
         BankAccountId.fromId(bankAccountTransactionEntity.getOriginAccountCode());
     final var targetAccountCode =
@@ -37,6 +39,7 @@ public class BankAccountTransactionMapperImpl implements BankAccountTransactionM
     return BankAccountTransaction.createTransactionWith(
         bankAccountTransactionEntity.getTransactionCode(),
         originAccountCode, targetAccountCode,
-        amount, bankAccountTransactionEntity.getConcept(), false);
+        amount, bankAccountTransactionEntity.getConcept(),
+        bankAccountTransactionEntity.getTransactionDate(), false);
   }
 }

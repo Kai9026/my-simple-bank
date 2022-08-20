@@ -1,8 +1,10 @@
 package com.github.kai9026.mysimplebank.domain.bankaccount;
 
+import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import com.github.kai9026.mysimplebank.domain.shared.objects.ValueObject;
 import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class BankAccountNumber implements ValueObject {
 
@@ -26,6 +28,14 @@ public class BankAccountNumber implements ValueObject {
   }
 
   public static BankAccountNumber fromString(final String accountNumber) {
+    // Simple validation (could be external, through API)
+    final var pattern = Pattern.compile("(\\d){4}\\s(\\d){4}\\s(\\d){4}\\s(\\d){4}");
+    final var matcher = pattern.matcher(accountNumber);
+
+    if (!matcher.matches()) {
+      throw new DomainValidationException("Invalid bank account number format");
+    }
+
     return new BankAccountNumber(accountNumber);
   }
 

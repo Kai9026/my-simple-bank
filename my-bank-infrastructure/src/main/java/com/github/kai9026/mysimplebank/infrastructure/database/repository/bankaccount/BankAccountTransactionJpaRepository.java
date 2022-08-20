@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BankAccountTransactionJpaRepository extends
     JpaRepository<BankAccountTransactionEntity, Long> {
 
-  List<BankAccountTransactionEntity> findByOriginAccountCodeOrTargetAccountCode(
-      final UUID originAccountCode, final UUID targetAccountCode);
+  List<BankAccountTransactionEntity> findByDiscriminatorAccountCode(
+      final UUID discriminatorAccountCode);
 }

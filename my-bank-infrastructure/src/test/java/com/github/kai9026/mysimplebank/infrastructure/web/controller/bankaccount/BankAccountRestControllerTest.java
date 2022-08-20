@@ -13,6 +13,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,9 +24,13 @@ import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.model.BankAccountCreationRequest;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.BankAccountDepositUseCase;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.model.BankAccountDepositRequest;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.detail.BankAccountDetailUseCase;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.detail.model.BankAccountDetailRequest;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.detail.model.BankAccountDetailResponse;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.RestExceptionHandler;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountResourceMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountApiMapper;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +51,10 @@ class BankAccountRestControllerTest {
   private BankAccountDepositUseCase bankAccountDepositUseCase;
 
   @MockBean
-  private BankAccountResourceMapper bankAccountResourceMapper;
+  private BankAccountDetailUseCase bankAccountDetailUseCase;
+
+  @MockBean
+  private BankAccountApiMapper bankAccountApiMapper;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -65,7 +73,7 @@ class BankAccountRestControllerTest {
         .thenReturn(bankAccountBaseResponse);
 
     final var bankAccountResourceDummy = createBankAccountResourceDummy();
-    when(this.bankAccountResourceMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
+    when(this.bankAccountApiMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
         .thenReturn(bankAccountResourceDummy);
 
     final var bankAccountCreationRequest = createBankAccountCreationRequest();
@@ -73,12 +81,11 @@ class BankAccountRestControllerTest {
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(bankAccountCreationRequest)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$").isNotEmpty())
-        .andReturn();
+        .andExpect(jsonPath("$").isNotEmpty());
 
     verify(this.bankAccountCreationUseCase, times(1))
         .createNewBankAccount(any(BankAccountCreationRequest.class));
-    verify(this.bankAccountResourceMapper, times(1))
+    verify(this.bankAccountApiMapper, times(1))
         .toBankAccountResource(any(BankAccountBaseResponse.class));
 
   }
@@ -95,11 +102,10 @@ class BankAccountRestControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorCode", is("err-01")))
         .andExpect(jsonPath("$.message", is("Invalid input data")))
-        .andExpect(jsonPath("$.detail", is("alias: must not be null")))
-        .andReturn();
+        .andExpect(jsonPath("$.detail", is("alias: must not be null")));
 
     verifyNoInteractions(this.bankAccountCreationUseCase);
-    verifyNoInteractions(this.bankAccountResourceMapper);
+    verifyNoInteractions(this.bankAccountApiMapper);
   }
 
   @Test
@@ -111,7 +117,7 @@ class BankAccountRestControllerTest {
     when(this.bankAccountDepositUseCase.depositIntoAccount(any(BankAccountDepositRequest.class)))
         .thenReturn(bankAccountBaseResponse);
     final var bankAccountResourceDummy = createBankAccountResourceDummy();
-    when(this.bankAccountResourceMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
+    when(this.bankAccountApiMapper.toBankAccountResource(any(BankAccountBaseResponse.class)))
         .thenReturn(bankAccountResourceDummy);
 
     final var bankAccountDepositRequest = createBankAccountDepositRequest();
@@ -120,12 +126,11 @@ class BankAccountRestControllerTest {
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(bankAccountDepositRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$").isNotEmpty())
-        .andReturn();
+        .andExpect(jsonPath("$").isNotEmpty());
 
     verify(this.bankAccountDepositUseCase, times(1))
         .depositIntoAccount(any(BankAccountDepositRequest.class));
-    verify(this.bankAccountResourceMapper, times(1))
+    verify(this.bankAccountApiMapper, times(1))
         .toBankAccountResource(any(BankAccountBaseResponse.class));
   }
 
@@ -145,12 +150,11 @@ class BankAccountRestControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorCode", is("err-01")))
         .andExpect(jsonPath("$.message", is("Invalid input data")))
-        .andExpect(jsonPath("$.detail", is("Invalid account")))
-        .andReturn();
+        .andExpect(jsonPath("$.detail", is("Invalid account")));
 
     verify(this.bankAccountDepositUseCase, times(1))
         .depositIntoAccount(any(BankAccountDepositRequest.class));
-    verifyNoInteractions(this.bankAccountResourceMapper);
+    verifyNoInteractions(this.bankAccountApiMapper);
   }
 
   @Test
@@ -166,11 +170,56 @@ class BankAccountRestControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorCode", is("err-01")))
         .andExpect(jsonPath("$.message", is("Invalid input data")))
-        .andExpect(jsonPath("$.detail", is("currency: must not be null")))
-        .andReturn();
+        .andExpect(jsonPath("$.detail", is("currency: must not be null")));
 
     verifyNoInteractions(this.bankAccountDepositUseCase);
-    verifyNoInteractions(this.bankAccountResourceMapper);
+    verifyNoInteractions(this.bankAccountApiMapper);
+  }
+
+  @Test
+  @DisplayName("Test bank account detail operation, if invalid data then return a bad request response and detail")
+  void getBankAccountDetail_withInvalidData_shouldReturnBadRequestResponseAndDetailMessage()
+      throws Exception {
+
+    doThrow(new InvalidInputDataException("Invalid account")).when(this.bankAccountDetailUseCase)
+        .getBankAccountDetail(any(BankAccountDetailRequest.class));
+
+    mockMvc.perform(
+            get("/bankaccount/" + UUID.randomUUID())
+                .contentType("application/json")
+                .param("from", "2022-07-01")
+                .param("to", "2022-09-01"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorCode", is("err-01")))
+        .andExpect(jsonPath("$.message", is("Invalid input data")))
+        .andExpect(jsonPath("$.detail", is("Invalid account")));
+
+    verify(this.bankAccountDetailUseCase, times(1))
+        .getBankAccountDetail(any(BankAccountDetailRequest.class));
+  }
+
+  @Test
+  @DisplayName("Test bank account detail operation, if no errors then return a response with ok status and resource")
+  void getBankAccountDetail_withValidData_shouldReturnOkStatusAndResource()
+      throws Exception {
+
+    when(this.bankAccountDetailUseCase.getBankAccountDetail(any(BankAccountDetailRequest.class)))
+        .thenReturn(createBankAccountDetailResponseDummy());
+
+    mockMvc.perform(
+            get("/bankaccount/" + UUID.randomUUID())
+                .contentType("application/json")
+                .param("from", "2022-07-01")
+                .param("to", "2022-09-01"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isNotEmpty());
+
+    verify(this.bankAccountDetailUseCase, times(1))
+        .getBankAccountDetail(any(BankAccountDetailRequest.class));
+  }
+
+  private BankAccountDetailResponse createBankAccountDetailResponseDummy() {
+    return new BankAccountDetailResponse(10.00F, List.of());
   }
 
 }

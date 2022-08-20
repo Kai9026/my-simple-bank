@@ -24,6 +24,7 @@ public class BankAccountDepositService implements BankAccountDepositUseCase {
   public BankAccountBaseResponse depositIntoAccount(BankAccountDepositRequest request) {
 
     try {
+      log.debug("");
 
       final var bankAccountId = BankAccountId.fromId(request.bankAccountId());
       final var depositAmount = request.depositAmount();

@@ -15,37 +15,42 @@ import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.domain.bankaccount.BankAccount;
 import com.github.kai9026.mysimplebank.domain.bankaccount.repository.BankAccountRepository;
+import com.github.kai9026.mysimplebank.domain.customer.Customer;
+import com.github.kai9026.mysimplebank.domain.customer.id.CustomerId;
+import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class BankAccountCreationServiceTest {
 
-  private final BankAccountRepository bankAccountRepository = mock(BankAccountRepository.class);
-  private final BankAccountCreationUseCaseMapper bankAccountCreationUseCaseMapper =
-      mock(BankAccountCreationUseCaseMapper.class);
+  @Mock
+  private BankAccountRepository bankAccountRepository;
+  @Mock
+  private BankAccountCreationUseCaseMapper bankAccountCreationUseCaseMapper;
 
+  @Mock
+  private CustomerRepository customerRepository;
+
+  @InjectMocks
   private BankAccountCreationService bankAccountCreationService;
 
-  @BeforeEach
-  private void init() {
-    this.bankAccountCreationService = new BankAccountCreationService(bankAccountRepository,
-        bankAccountCreationUseCaseMapper);
-  }
-
   @Test
-  @DisplayName("Test bank account creation use case, throws InvalidInputDataException")
-  void createBankAccount_withoutCustomerCode_throwsException() {
+  @DisplayName("Test bank account creation use case with invalid data, throws InvalidInputDataException")
+  void createBankAccount_withInvalidData_throwsException() {
+    when(this.customerRepository.findById(any(CustomerId.class)))
+        .thenReturn(Optional.of(mock(Customer.class)));
     doThrow(new InvalidInputDataException("Account alias is required")).when(
             this.bankAccountCreationUseCaseMapper)
         .toBankAccount(any(BankAccountCreationRequest.class));
-    when(this.bankAccountRepository.save(any(BankAccount.class)))
-        .thenReturn(dummyBankAccount());
 
     final var request =
         new BankAccountCreationRequest("alias", "EUR", UUID.randomUUID());
@@ -55,8 +60,24 @@ class BankAccountCreationServiceTest {
   }
 
   @Test
+  @DisplayName("Test bank account creation use case with invalid customer, throws InvalidInputDataException")
+  void createBankAccount_withInvalidCustomer_throwsException() {
+    doThrow(new InvalidInputDataException("Invalid customer")).when(
+            this.customerRepository)
+        .findById(any(CustomerId.class));
+
+    final var request =
+        new BankAccountCreationRequest("alias", "EUR", UUID.randomUUID());
+    assertThatThrownBy(() -> this.bankAccountCreationService.createNewBankAccount(request))
+        .isInstanceOf(InvalidInputDataException.class)
+        .hasMessageContaining("Invalid customer");
+  }
+
+  @Test
   @DisplayName("Test bank account creation use case, expect return created account")
   void createBankAccount_withValidParameters_shouldCreateCustomer() {
+    when(this.customerRepository.findById(any(CustomerId.class)))
+        .thenReturn(Optional.of(mock(Customer.class)));
     when(this.bankAccountCreationUseCaseMapper.toBankAccount(any(BankAccountCreationRequest.class)))
         .thenReturn(mock(BankAccount.class));
     when(this.bankAccountRepository.save(any(BankAccount.class)))

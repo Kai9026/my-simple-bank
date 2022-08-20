@@ -51,7 +51,7 @@ class CustomerRegistrationServiceTest {
   @DisplayName("Test customer registration use case, throws DuplicateCustomerException")
   void registerCustomer_withDuplicateEmailOrNick_throwsException() {
 
-    when(this.customerRepository.checkDuplicatedUserByEmail(anyString()))
+    when(this.customerRepository.checkDuplicatedCustomerByEmail(anyString()))
         .thenReturn(true);
     when(this.customerRepository.save(any(Customer.class)))
         .thenReturn(dummyCustomer());
@@ -65,7 +65,7 @@ class CustomerRegistrationServiceTest {
         .hasMessageContaining(
             "Customer with email '" + EMAIL + "' already exists");
     verify(this.customerRepository, times(1))
-        .checkDuplicatedUserByEmail(anyString());
+        .checkDuplicatedCustomerByEmail(anyString());
     verifyNoMoreInteractions(this.customerRepository);
   }
 
@@ -73,7 +73,7 @@ class CustomerRegistrationServiceTest {
   @DisplayName("Test customer registration use case, throws InvalidInputDataException")
   void registerCustomer_withInvalidParameters_throwsException() {
 
-    when(this.customerRepository.checkDuplicatedUserByEmail(anyString()))
+    when(this.customerRepository.checkDuplicatedCustomerByEmail(anyString()))
         .thenReturn(false);
     when(this.customerRepository.save(any(Customer.class)))
         .thenReturn(dummyCustomer());
@@ -87,14 +87,14 @@ class CustomerRegistrationServiceTest {
         .hasMessageContaining(
             "Postal code format is not valid");
     verify(this.customerRepository, times(1))
-        .checkDuplicatedUserByEmail(anyString());
+        .checkDuplicatedCustomerByEmail(anyString());
   }
 
   @Test
   @DisplayName("Test customer registration use case, expect return registered customer")
   void registerCustomer_withValidParameters_shouldRegisterCustomer() {
 
-    when(this.customerRepository.checkDuplicatedUserByEmail(anyString()))
+    when(this.customerRepository.checkDuplicatedCustomerByEmail(anyString()))
         .thenReturn(false);
     when(this.customerRepository.save(any(Customer.class)))
         .thenReturn(dummyCustomer());
@@ -108,7 +108,7 @@ class CustomerRegistrationServiceTest {
 
     assertNotNull(customerRegistrationResponse);
     verify(this.customerRepository, times(1))
-        .checkDuplicatedUserByEmail(anyString());
+        .checkDuplicatedCustomerByEmail(anyString());
     verify(this.customerRepository, times(1))
         .save(any(Customer.class));
   }

@@ -6,5 +6,5 @@ import com.github.kai9026.mysimplebank.domain.shared.Repository;
 
 public interface CustomerRepository extends Repository<Customer, CustomerId> {
 
-  boolean checkDuplicatedUserByEmail(String email);
+  boolean checkDuplicatedCustomerByEmail(String email);
 }

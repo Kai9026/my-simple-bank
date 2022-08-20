@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,9 @@ public class BankAccountTransactionEntity {
   private UUID transactionCode;
 
   @Column(nullable = false)
+  private UUID discriminatorAccountCode;
+
+  @Column(nullable = false)
   private UUID originAccountCode;
 
   @Column(nullable = false)
@@ -38,5 +42,8 @@ public class BankAccountTransactionEntity {
 
   @Column(nullable = false)
   private LocalDate transactionDate;
+
+  @Version
+  private Long version;
 
 }

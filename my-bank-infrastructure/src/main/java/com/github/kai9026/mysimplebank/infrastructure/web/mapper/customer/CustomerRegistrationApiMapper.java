@@ -5,7 +5,7 @@ import com.github.kai9026.mysimplebank.application.usecase.customer.registration
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
 
-public interface CustomerRegistrationMapper {
+public interface CustomerRegistrationApiMapper {
 
   CustomerRegistrationRequest toApplicationModel(CustomerCreationApiRequest request);
   CustomerResource toResourceModel(CustomerRegistrationResponse response);

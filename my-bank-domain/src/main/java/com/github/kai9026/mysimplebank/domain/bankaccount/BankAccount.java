@@ -141,7 +141,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     this.intervalBalance = Money.of(Money.ZERO_MONEY, this.defaultCurrency);
   }
 
-  public void depositMoney(final double moneyAmount, final String currency,
+  public void depositMoney(final double amountToDeposit, final String currency,
       final String concept, final BankAccountId originAccountId) {
     if (isEmptyField(currency) || !currency.equals(this.defaultCurrency)) {
       throw new DomainValidationException(
@@ -149,8 +149,24 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     }
     final var transaction =
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(), originAccountId,
-            this.id(),
-            Money.of(moneyAmount, currency), concept, true);
+            this.id(), Money.of(amountToDeposit, currency), concept, null, true);
+    this.transactionsInInterval.add(transaction);
+    this.calculateBalance();
+  }
+
+  public void withDrawMoney(final double amountToWithdraw, final String currency,
+      final String concept, final BankAccountId targetAccountId) {
+    if (isEmptyField(currency) || !currency.equals(this.defaultCurrency)) {
+      throw new DomainValidationException(
+          "Currency is incorrect. Must be non empty and '" + this.defaultCurrency + "'");
+    }
+    final var moneyToWithdraw = Money.of(amountToWithdraw, currency);
+    if (!accountBalance().subtract(moneyToWithdraw).isPositiveOrZero()) {
+      throw new DomainValidationException("Impossible to perform the operation. Not enough money");
+    }
+    final var transaction =
+        BankAccountTransaction.createTransactionWith(UUID.randomUUID(), this.id(),
+            targetAccountId, Money.of(amountToWithdraw, currency), concept, null, true);
     this.transactionsInInterval.add(transaction);
     this.calculateBalance();
   }
@@ -167,10 +183,11 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
         .map(BankAccountTransaction::transactionAmount)
         .reduce(Money::sum).orElse(Money.of(Money.ZERO_MONEY, CURRENCY_EUR_MONEY));
 
-    final var totalMoney = positiveBalance.subtract(negativeBalance);
+    this.intervalBalance = positiveBalance.subtract(negativeBalance);
+
+    final var totalMoney = consolidatedBalance().sum(intervalBalance);
     if (!totalMoney.isPositiveOrZero()) {
       throw new DomainValidationException("Balance account cannot be lower than zero");
     }
-    this.intervalBalance = totalMoney;
   }
 }

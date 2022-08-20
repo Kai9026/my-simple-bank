@@ -1,16 +1,12 @@
 package com.github.kai9026.mysimplebank.infrastructure.web.controller.customer;
 
+import static com.github.kai9026.mysimplebank.infrastructure.web.controller.dummy.CustomerDummyData.createCustomerRegistrationRequest;
 import static com.github.kai9026.mysimplebank.infrastructure.web.controller.dummy.CustomerDummyData.createCustomerRegistrationResponse;
 import static com.github.kai9026.mysimplebank.infrastructure.web.controller.dummy.CustomerDummyData.createCustomerRequest;
 import static com.github.kai9026.mysimplebank.infrastructure.web.controller.dummy.CustomerDummyData.createCustomerResourceDummy;
-import static com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.model.ErrorCodeEnum.VALIDATION_DATA_ERROR;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -26,10 +22,8 @@ import com.github.kai9026.mysimplebank.application.usecase.customer.registration
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationRequest;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.model.CustomerRegistrationResponse;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
-import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
 import com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.RestExceptionHandler;
-import com.github.kai9026.mysimplebank.infrastructure.web.errorhandling.model.ErrorModel;
-import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationMapper;
+import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationApiMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +40,7 @@ class CustomerRestControllerTest {
   private CustomerRegistrationUseCase customerRegistrationUseCase;
 
   @MockBean
-  private CustomerRegistrationMapper customerRegistrationMapper;
+  private CustomerRegistrationApiMapper customerRegistrationApiMapper;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -58,14 +52,16 @@ class CustomerRestControllerTest {
   @DisplayName("Test customer rest controller, if no errors then return a response with created status and resource")
   void createCustomer_withValidPayload_shouldReturnResponseWithStatusCreatedAndResource()
       throws Exception {
-    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerCreationApiRequest.class)))
-        .thenReturn(mock(CustomerRegistrationRequest.class));
+    when(this.customerRegistrationApiMapper.toApplicationModel(
+        any(CustomerCreationApiRequest.class)))
+        .thenReturn(createCustomerRegistrationRequest());
     final var customerRegistrationResponse = createCustomerRegistrationResponse();
     when(this.customerRegistrationUseCase.registerNewCustomer(
         any(CustomerRegistrationRequest.class)))
         .thenReturn(customerRegistrationResponse);
     final var customerResourceDummy = createCustomerResourceDummy();
-    when(this.customerRegistrationMapper.toResourceModel(any(CustomerRegistrationResponse.class)))
+    when(
+        this.customerRegistrationApiMapper.toResourceModel(any(CustomerRegistrationResponse.class)))
         .thenReturn(customerResourceDummy);
 
     final var customerRequest = createCustomerRequest();
@@ -73,14 +69,13 @@ class CustomerRestControllerTest {
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(customerRequest)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$").isNotEmpty())
-        .andReturn();
+        .andExpect(jsonPath("$").isNotEmpty());
 
     verify(this.customerRegistrationUseCase, times(1))
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
-    verify(this.customerRegistrationMapper, times(1))
+    verify(this.customerRegistrationApiMapper, times(1))
         .toApplicationModel(any(CustomerCreationApiRequest.class));
-    verify(this.customerRegistrationMapper, times(1))
+    verify(this.customerRegistrationApiMapper, times(1))
         .toResourceModel(any(CustomerRegistrationResponse.class));
   }
 
@@ -88,8 +83,9 @@ class CustomerRestControllerTest {
   @DisplayName("Test customer rest controller, if duplicated customer then return a response with bad request response status")
   void createCustomer_withExistingEmail_shouldReturnResponseWithBadRequestStatus()
       throws Exception {
-    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerCreationApiRequest.class)))
-        .thenReturn(mock(CustomerRegistrationRequest.class));
+    when(this.customerRegistrationApiMapper.toApplicationModel(
+        any(CustomerCreationApiRequest.class)))
+        .thenReturn(createCustomerRegistrationRequest());
     doThrow(new DuplicateCustomerException("customer@mail.com"))
         .when(this.customerRegistrationUseCase)
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
@@ -101,24 +97,26 @@ class CustomerRestControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorCode", is("err-01")))
         .andExpect(jsonPath("$.message", is("Invalid input data")))
-        .andExpect(jsonPath("$.detail", is("Customer with email 'customer@mail.com' already exists")))
-        .andReturn();
+        .andExpect(
+            jsonPath("$.detail", is("Customer with email 'customer@mail.com' already exists")));
 
     verify(this.customerRegistrationUseCase, times(1))
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
-    verify(this.customerRegistrationMapper, times(1))
+    verify(this.customerRegistrationApiMapper, times(1))
         .toApplicationModel(any(CustomerCreationApiRequest.class));
-    verifyNoMoreInteractions(this.customerRegistrationMapper);
+    verifyNoMoreInteractions(this.customerRegistrationApiMapper);
   }
 
   @Test
   @DisplayName("Test customer rest controller, if invalid data then return a response with bad request response status")
   void createCustomer_withInvalidParams_shouldReturnResponseWithBadRequestStatus()
       throws Exception {
-    when(this.customerRegistrationMapper.toApplicationModel(any(CustomerCreationApiRequest.class)))
-        .thenReturn(mock(CustomerRegistrationRequest.class));
+    when(this.customerRegistrationApiMapper.toApplicationModel(
+        any(CustomerCreationApiRequest.class)))
+        .thenReturn(createCustomerRegistrationRequest());
     final var customerResourceDummy = createCustomerResourceDummy();
-    when(this.customerRegistrationMapper.toResourceModel(any(CustomerRegistrationResponse.class)))
+    when(
+        this.customerRegistrationApiMapper.toResourceModel(any(CustomerRegistrationResponse.class)))
         .thenReturn(customerResourceDummy);
     doThrow(new InvalidInputDataException("Email cannot be null"))
         .when(this.customerRegistrationUseCase)
@@ -131,14 +129,13 @@ class CustomerRestControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorCode", is("err-01")))
         .andExpect(jsonPath("$.message", is("Invalid input data")))
-        .andExpect(jsonPath("$.detail", is("Email cannot be null")))
-        .andReturn();
+        .andExpect(jsonPath("$.detail", is("Email cannot be null")));
 
     verify(this.customerRegistrationUseCase, times(1))
         .registerNewCustomer(any(CustomerRegistrationRequest.class));
-    verify(this.customerRegistrationMapper, times(1))
+    verify(this.customerRegistrationApiMapper, times(1))
         .toApplicationModel(any(CustomerCreationApiRequest.class));
-    verifyNoMoreInteractions(this.customerRegistrationMapper);
+    verifyNoMoreInteractions(this.customerRegistrationApiMapper);
 
   }
 

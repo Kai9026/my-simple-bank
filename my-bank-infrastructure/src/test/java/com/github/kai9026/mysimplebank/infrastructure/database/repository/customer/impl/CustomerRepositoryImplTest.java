@@ -43,7 +43,7 @@ class CustomerRepositoryImplTest {
     when(this.customerJpaRepository.existsCustomerByEmail(anyString()))
         .thenReturn(true);
 
-    assertTrue(this.customerRepository.checkDuplicatedUserByEmail("joe@mail.com"));
+    assertTrue(this.customerRepository.checkDuplicatedCustomerByEmail("joe@mail.com"));
   }
 
   @Test
@@ -52,7 +52,7 @@ class CustomerRepositoryImplTest {
     when(this.customerJpaRepository.existsCustomerByEmail(anyString()))
         .thenReturn(false);
 
-    assertFalse(this.customerRepository.checkDuplicatedUserByEmail("joe@mail.com"));
+    assertFalse(this.customerRepository.checkDuplicatedCustomerByEmail("joe@mail.com"));
   }
 
   @Test

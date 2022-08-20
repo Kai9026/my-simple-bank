@@ -6,6 +6,8 @@ import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.creation.model.BankAccountCreationRequest;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.model.BankAccountBaseResponse;
 import com.github.kai9026.mysimplebank.domain.bankaccount.repository.BankAccountRepository;
+import com.github.kai9026.mysimplebank.domain.customer.id.CustomerId;
+import com.github.kai9026.mysimplebank.domain.customer.repository.CustomerRepository;
 import com.github.kai9026.mysimplebank.domain.exception.DomainValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BankAccountCreationService implements BankAccountCreationUseCase {
 
   private final BankAccountRepository bankAccountRepository;
+  private final CustomerRepository customerRepository;
   private final BankAccountCreationUseCaseMapper bankAccountCreationUseCaseMapper;
 
   @Override
@@ -23,6 +26,11 @@ public class BankAccountCreationService implements BankAccountCreationUseCase {
   public BankAccountBaseResponse createNewBankAccount(BankAccountCreationRequest request) {
 
     try {
+
+      final var customerCode = CustomerId.fromId(request.accountCustomerCode());
+      if (this.customerRepository.findById(customerCode).isEmpty()) {
+        throw new InvalidInputDataException("Invalid customer");
+      }
 
       final var newBankAccount =
           this.bankAccountCreationUseCaseMapper.toBankAccount(request);

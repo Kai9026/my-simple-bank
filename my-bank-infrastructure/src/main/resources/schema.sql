@@ -9,6 +9,7 @@ CREATE TABLE customers (
     email VARCHAR(45) NOT NULL,
     birthdate DATE NOT NULL,
     password VARCHAR(250) NOT NULL,
+    version BIGINT DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -23,6 +24,7 @@ CREATE TABLE bank_accounts (
     customer_code UUID NOT NULL,
     start_interval DATE NOT NULL,
     end_interval DATE NOT NULL,
+    version BIGINT DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -30,14 +32,17 @@ ALTER TABLE bank_accounts
   ADD FOREIGN KEY (customer_code)
   REFERENCES customers(customer_code);
 
+--Rethink solution about this
 CREATE TABLE transactions (
    id INTEGER NOT NULL AUTO_INCREMENT,
    transaction_code UUID NOT NULL,
+   discriminator_account_code UUID NOT NULL,
    origin_account_code UUID NOT NULL,
    target_account_code UUID NOT NULL,
    amount FLOAT NOT NULL,
    concept VARCHAR(45) NOT NULL,
    transaction_date DATE NOT NULL,
+   version BIGINT DEFAULT 0,
    PRIMARY KEY (id)
 );
 

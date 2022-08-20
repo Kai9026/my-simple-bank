@@ -56,7 +56,7 @@ class BankAccountTest {
   @Test
   @DisplayName("Test initialize with transactions, expected to return BankAccount aggregate")
   void createBankAccount_withValidTransactions_throwsException() {
-    final var bankAccount = createBankAccountWithValidTransactions();
+    final var bankAccount = createBankAccountWithThreeValidTransactions();
 
     assertNotNull(bankAccount);
     assertEquals(Money.of(105.00, "EUR"), bankAccount.accountBalance());
@@ -100,6 +100,53 @@ class BankAccountTest {
         BankAccountId.fromId(UUID.randomUUID())))
         .isInstanceOf(DomainValidationException.class)
         .hasMessageContaining("Currency is incorrect. Must be non empty and 'EUR'");
+  }
+
+  @Test
+  @DisplayName("Test withdraw money from account, if not enough money throws DomainValidationException")
+  void withdrawMoney_withNotEnoughMoney_throwsException() {
+    final var bankAccount = createBankAccount(VALID_DATA);
+
+    assertThatThrownBy(() -> bankAccount.withDrawMoney(5.00, "EUR", "Bizum",
+        BankAccountId.fromId(UUID.randomUUID())))
+        .isInstanceOf(DomainValidationException.class)
+        .hasMessageContaining("Impossible to perform the operation. Not enough money");
+  }
+
+  @Test
+  @DisplayName("Test withdraw money from account, with invalid params throws DomainValidationException")
+  void withdrawMoney_withInvalidParams_throwsException() {
+    final var bankAccount = createBankAccount(VALID_DATA);
+
+    assertThatThrownBy(() -> bankAccount.withDrawMoney(25.00, "USD", "Bizum DAZN",
+        BankAccountId.fromId(UUID.randomUUID())))
+        .isInstanceOf(DomainValidationException.class)
+        .hasMessageContaining("Currency is incorrect. Must be non empty and 'EUR'");
+  }
+
+  @Test
+  @DisplayName("Test withdraw money from account, expected to add transaction and decrease account balance")
+  void withdrawMoney_withValidParams_shouldUpdateBankAccount() {
+
+    final var bankAccount = createBankAccountWithThreeValidTransactions();
+
+    bankAccount.withDrawMoney(5.00, "EUR", "Bizum",
+        BankAccountId.fromId(UUID.randomUUID()));
+
+    assertEquals(Money.of(100.00, "EUR"), bankAccount.accountBalance());
+    assertThat(bankAccount.activeTransactions()).hasSize(4);
+  }
+
+  @Test
+  @DisplayName("")
+  void closeCurrentInterval_shouldUpdateConsolidatedAndIntervalBalance() {
+    final var bankAccount = createBankAccountWithThreeValidTransactions();
+
+    bankAccount.closeCurrentInterval();
+
+    assertEquals(Money.of(105.00, "EUR"), bankAccount.consolidatedBalance());
+    assertEquals(Money.of(0.00, "EUR"), bankAccount.intervalBalance());
+    assertEquals(Money.of(105.00, "EUR"), bankAccount.accountBalance());
   }
 
   @Test

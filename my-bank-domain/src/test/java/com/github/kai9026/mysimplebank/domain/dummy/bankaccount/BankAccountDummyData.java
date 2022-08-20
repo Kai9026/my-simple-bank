@@ -12,23 +12,25 @@ import java.util.UUID;
 
 public class BankAccountDummyData {
 
+  private static final String ACCOUNT_NUMBER = "3214 4245 8473 3213";
+
   public static BankAccount createBankAccount(DummyData dummyData) {
     return BankAccount.initAccountWith(dummyData.aliasAccount, dummyData.defaultCurrency,
         dummyData.bankAccountId, dummyData.customerCode, dummyData.startIntervalDate);
   }
 
-  public static BankAccount createBankAccountWithValidTransactions() {
+  public static BankAccount createBankAccountWithThreeValidTransactions() {
     final var accountId = UUID.randomUUID();
     List<BankAccountTransaction> transactions = List.of(
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
             BankAccountId.fromId(accountId), BankAccountId.fromId(UUID.randomUUID()),
-            Money.of(10.00, "EUR"), "Bizum", true),
+            Money.of(10.00, "EUR"), "Bizum", null, true),
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
             BankAccountId.fromId(accountId), BankAccountId.fromId(accountId),
-            Money.of(15.00, "EUR"), "Deposit", true),
+            Money.of(15.00, "EUR"), "Deposit", null, true),
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
             BankAccountId.fromId(UUID.randomUUID()), BankAccountId.fromId(accountId),
-            Money.of(100.00, "EUR"), "PC", true)
+            Money.of(100.00, "EUR"), "PC", null, true)
     );
 
     return BankAccount.initAccountWithTransactions(VALID_DATA.aliasAccount,
@@ -39,14 +41,13 @@ public class BankAccountDummyData {
 
 
   public enum DummyData {
-    VALID_DATA(UUID.randomUUID(), "Save account", "number", UUID.randomUUID(), "EUR",
+    VALID_DATA(UUID.randomUUID(), "Save account", ACCOUNT_NUMBER, UUID.randomUUID(), "EUR",
         LocalDate.now(), 0.00),
-    OTHER_VALID_DATA(UUID.randomUUID(), "Invest account", "number", UUID.randomUUID(), "EUR",
-        LocalDate.now(), 0.00),
-    INVALID_DATA_NULL_CURRENCY(UUID.randomUUID(), "Invest account", "number", UUID.randomUUID(),
-        null,
-        LocalDate.now(), 0.00),
-    INVALID_DATA_NULL_CUSTOMER(UUID.randomUUID(), "Invest account", "number", null, "EUR",
+    OTHER_VALID_DATA(UUID.randomUUID(), "Invest account", ACCOUNT_NUMBER, UUID.randomUUID(), "EUR",
+        LocalDate.now(), 10.00),
+    INVALID_DATA_NULL_CURRENCY(UUID.randomUUID(), "Invest account", ACCOUNT_NUMBER,
+        UUID.randomUUID(), null, LocalDate.now(), 0.00),
+    INVALID_DATA_NULL_CUSTOMER(UUID.randomUUID(), "Invest account", ACCOUNT_NUMBER, null, "EUR",
         LocalDate.now(), 0.00);
 
     private final UUID bankAccountId;
