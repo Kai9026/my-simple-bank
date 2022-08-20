@@ -52,8 +52,11 @@ public class BankAccountDetailService implements BankAccountDetailUseCase {
       final LocalDate transactionsTo, final BankAccount bankAccount) {
     return bankAccount.activeTransactions()
         .stream()
-        .filter(tx -> tx.transactionDate().isAfter(transactionsFrom) &&
-            tx.transactionDate().isBefore(transactionsTo)).toList();
+        .filter(tx -> (tx.transactionDate().isEqual(transactionsFrom) ||
+                  tx.transactionDate().isAfter(transactionsFrom)) &&
+            (tx.transactionDate().isEqual(transactionsTo)
+              || tx.transactionDate().isBefore(transactionsTo)))
+            .toList();
   }
 
   private Map<String, LocalDate> calculateSearchInterval(LocalDate transactionsFrom,

@@ -6,6 +6,7 @@ import com.github.kai9026.mysimplebank.application.usecase.customer.registration
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerCreationApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.model.CustomerResource;
 import com.github.kai9026.mysimplebank.infrastructure.web.mapper.customer.CustomerRegistrationApiMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Customer", description = "Customer operations")
 public class CustomerRestController {
 
   private final CustomerRegistrationUseCase customerRegistrationUseCase;

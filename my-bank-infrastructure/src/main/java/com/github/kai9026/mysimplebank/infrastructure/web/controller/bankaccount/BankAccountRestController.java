@@ -14,6 +14,7 @@ import com.github.kai9026.mysimplebank.infrastructure.web.controller.bankaccount
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.bankaccount.model.BankAccountResource;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.customer.CustomerRestController;
 import com.github.kai9026.mysimplebank.infrastructure.web.mapper.bankaccount.BankAccountApiMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bankaccount")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "BankAccount", description = "Bank Account operations")
 public class BankAccountRestController {
 
   private final BankAccountCreationUseCase bankAccountCreationUseCase;
