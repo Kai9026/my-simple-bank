@@ -27,7 +27,7 @@ public class CustomerRestController {
   @PostMapping
   public ResponseEntity<CustomerResource> createCustomer(
       @RequestBody @Validated final CustomerCreationApiRequest request) {
-    log.info(">> Create customer operation with request: {}", request);
+    log.info(">> Create customer operation with request -> {}", request);
 
     final var customerRegistrationRequest =
         this.customerRegistrationApiMapper.toApplicationModel(request);

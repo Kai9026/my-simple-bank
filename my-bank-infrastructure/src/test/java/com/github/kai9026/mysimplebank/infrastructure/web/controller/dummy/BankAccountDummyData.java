@@ -39,6 +39,10 @@ public final class BankAccountDummyData {
     return new BankAccountCreationApiRequest(null, "EUR", UUID.randomUUID());
   }
 
+  public static BankAccountCreationApiRequest createInvalidBankAccountInvalidCustomer() {
+    return new BankAccountCreationApiRequest("alias", "EUR", UUID.randomUUID());
+  }
+
   public static BankAccountDepositApiRequest createBankAccountDepositRequest() {
     return new BankAccountDepositApiRequest(10.00, "EUR", "Deposit");
   }
@@ -51,8 +55,8 @@ public final class BankAccountDummyData {
     List<BankAccountTransaction> transactions = List.of(
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(),
             BankAccountId.fromId(UUID.randomUUID()), BankAccountId.fromId(UUID.randomUUID()),
-            Money.of(10.00, "EUR"), "transfer", true));
-    return BankAccount.initAccountWithTransactions("alias", "number", "EUR", UUID.randomUUID(),
+            Money.of(10.00, "EUR"), "transfer", null,true));
+    return BankAccount.initAccountWithTransactions("alias", "3214 4245 8473 3213", "EUR", UUID.randomUUID(),
         UUID.randomUUID(), LocalDate.now(), 0.00, transactions);
   }
 }

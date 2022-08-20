@@ -24,7 +24,7 @@ public class MoneyTransferRestController {
   @PostMapping
   public ResponseEntity<Void> transferMoneyBetweenAccounts(
       @Validated @RequestBody MoneyTransferApiRequest request) {
-    log.info(">> Transfer money between accounts with request: {}", request);
+    log.info(">> Transfer money between accounts with request -> {}", request);
 
     final var transferMoneyRequest = this.moneyTransferApiMapper.toApplicationModel(request);
     this.transferMoneyUseCase.transferMoney(transferMoneyRequest);

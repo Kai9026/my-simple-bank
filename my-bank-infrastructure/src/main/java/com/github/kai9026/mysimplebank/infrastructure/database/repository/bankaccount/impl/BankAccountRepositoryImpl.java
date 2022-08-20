@@ -10,9 +10,11 @@ import com.github.kai9026.mysimplebank.infrastructure.database.repository.bankac
 import com.github.kai9026.mysimplebank.infrastructure.database.repository.bankaccount.BankAccountTransactionJpaRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class BankAccountRepositoryImpl implements BankAccountRepository {
 
   private final BankAccountJpaRepository bankAccountJpaRepository;
@@ -22,6 +24,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 
   @Override
   public BankAccount save(BankAccount bankAccount) {
+    log.debug("Saving bank account -> {}", bankAccount);
     final var bankAccountEntity = bankAccountMapper.toBankAccountEntity(bankAccount);
     bankAccountJpaRepository.save(bankAccountEntity);
     return bankAccount;
@@ -29,6 +32,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 
   @Override
   public Optional<BankAccount> findById(BankAccountId bankAccountId) {
+    log.debug("Retrieving bank account by id -> {}", bankAccountId.id());
     final var bankAccount = bankAccountJpaRepository.findByAccountCode(bankAccountId.id());
     final var bankAccountTransactions = bankAccountTransactionJpaRepository
         .findByDiscriminatorAccountCode(bankAccountId.id())
@@ -42,6 +46,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 
   @Override
   public BankAccount update(BankAccount bankAccount) {
+    log.debug("Updating bank account -> {}", bankAccount);
     final var accountEntity =
         this.bankAccountJpaRepository.findByAccountCode(bankAccount.id().id())
             .orElseThrow(() -> new EmptyResultDataAccessException("Invalid account code", 1));
@@ -50,6 +55,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
     accountEntity.setIntervalBalance(bankAccount.intervalBalance().amount().floatValue());
     this.bankAccountJpaRepository.save(accountEntity);
 
+    log.debug("Saving active transactions -> {}", bankAccount);
     bankAccount.activeTransactions().stream()
         .filter(BankAccountTransaction::newTransaction)
         .map(bankTx -> this.bankAccountTransactionMapper

@@ -11,7 +11,7 @@ public class BankAccountTransactionDummyData {
   public static BankAccountTransaction createBankAccountTransaction(DummyData dummyData) {
     return BankAccountTransaction.createTransactionWith(dummyData.transactionAccountId,
         dummyData.originBankAccountId, dummyData.targetBankAccountId, dummyData.transactionAmount,
-        dummyData.transactionConcept, dummyData.newTransaction);
+        dummyData.transactionConcept, dummyData.transactionDate, dummyData.newTransaction);
   }
 
 

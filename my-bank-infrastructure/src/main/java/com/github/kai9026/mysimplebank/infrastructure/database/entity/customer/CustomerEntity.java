@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,4 +48,7 @@ public class CustomerEntity {
 
   @Column(nullable = false)
   private String password;
+
+  @Version
+  private Long version;
 }

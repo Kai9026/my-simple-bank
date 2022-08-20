@@ -39,6 +39,7 @@ public class BankAccountTransactionMapperImpl implements BankAccountTransactionM
     return BankAccountTransaction.createTransactionWith(
         bankAccountTransactionEntity.getTransactionCode(),
         originAccountCode, targetAccountCode,
-        amount, bankAccountTransactionEntity.getConcept(), false);
+        amount, bankAccountTransactionEntity.getConcept(),
+        bankAccountTransactionEntity.getTransactionDate(), false);
   }
 }

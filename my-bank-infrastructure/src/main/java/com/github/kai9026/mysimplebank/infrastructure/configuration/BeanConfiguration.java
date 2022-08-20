@@ -8,6 +8,10 @@ import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.B
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.mapper.BankAccountDepositUseCaseMapper;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.mapper.impl.BankAccountDepositUseCaseMapperImpl;
 import com.github.kai9026.mysimplebank.application.usecase.bankaccount.deposit.service.BankAccountDepositService;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.detail.BankAccountDetailUseCase;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.detail.mapper.BankAccountDetailMapper;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.detail.mapper.impl.BankAccountDetailMapperImpl;
+import com.github.kai9026.mysimplebank.application.usecase.bankaccount.detail.service.BankAccountDetailService;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.CustomerRegistrationUseCase;
 import com.github.kai9026.mysimplebank.application.usecase.customer.registration.service.CustomerRegistrationService;
 import com.github.kai9026.mysimplebank.application.usecase.transfermoney.TransferMoneyUseCase;
@@ -61,8 +65,10 @@ public class BeanConfiguration {
   @Bean
   public BankAccountCreationUseCase bankAccountCreationUseCase(
       final BankAccountRepository bankAccountRepository,
+      final CustomerRepository customerRepository,
       final BankAccountCreationUseCaseMapper bankAccountCreationUseCaseMapper) {
-    return new BankAccountCreationService(bankAccountRepository, bankAccountCreationUseCaseMapper);
+    return new BankAccountCreationService(bankAccountRepository, customerRepository,
+        bankAccountCreationUseCaseMapper);
   }
 
   @Bean
@@ -110,13 +116,26 @@ public class BeanConfiguration {
   }
 
   @Bean
-  public TransferMoneyUseCase transferMoneyUseCase(final BankAccountRepository bankAccountRepository) {
+  public TransferMoneyUseCase transferMoneyUseCase(
+      final BankAccountRepository bankAccountRepository) {
     return new TransferMoneyService(bankAccountRepository);
   }
 
   @Bean
   public MoneyTransferApiMapper moneyTransferApiMapper() {
     return new MoneyTransferApiMapperImpl();
+  }
+
+  @Bean
+  public BankAccountDetailUseCase bankAccountDetailUseCase(
+      final BankAccountRepository bankAccountRepository,
+      final BankAccountDetailMapper bankAccountDetailMapper) {
+    return new BankAccountDetailService(bankAccountRepository, bankAccountDetailMapper);
+  }
+
+  @Bean
+  public BankAccountDetailMapper bankAccountDetailMapper() {
+    return new BankAccountDetailMapperImpl();
   }
 
 }

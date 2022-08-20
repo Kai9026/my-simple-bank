@@ -160,7 +160,7 @@ class TransferMoneyServiceTest {
   }
 
   private BankAccount createBankAccountWithEnoughMoney(UUID accountId) {
-    return BankAccount.initAccountWithTransactions("alias", "number", "EUR",
+    return BankAccount.initAccountWithTransactions("alias", "3214 4245 8473 3213", "EUR",
         accountId, UUID.randomUUID(), LocalDate.now(), 10.00, List.of());
   }
 

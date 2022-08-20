@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,5 +46,8 @@ public class BankAccountEntity {
 
   @Column(nullable = false)
   private LocalDate endInterval;
+
+  @Version
+  private Long version;
 
 }

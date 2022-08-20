@@ -149,7 +149,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     }
     final var transaction =
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(), originAccountId,
-            this.id(), Money.of(amountToDeposit, currency), concept, true);
+            this.id(), Money.of(amountToDeposit, currency), concept, null, true);
     this.transactionsInInterval.add(transaction);
     this.calculateBalance();
   }
@@ -166,7 +166,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     }
     final var transaction =
         BankAccountTransaction.createTransactionWith(UUID.randomUUID(), this.id(),
-            targetAccountId, Money.of(amountToWithdraw, currency), concept, true);
+            targetAccountId, Money.of(amountToWithdraw, currency), concept, null, true);
     this.transactionsInInterval.add(transaction);
     this.calculateBalance();
   }

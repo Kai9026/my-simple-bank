@@ -28,7 +28,7 @@ public class CustomerRegistrationService implements CustomerRegistrationUseCase 
     final var customerEmail = request.customerEmail();
 
     try {
-      final var customerAlreadyExists = customerRepository.checkDuplicatedUserByEmail(
+      final var customerAlreadyExists = customerRepository.checkDuplicatedCustomerByEmail(
           customerEmail);
 
       return Optional.of(customerAlreadyExists)
