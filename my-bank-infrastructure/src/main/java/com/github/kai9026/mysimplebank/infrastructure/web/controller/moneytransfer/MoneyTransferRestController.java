@@ -3,6 +3,7 @@ package com.github.kai9026.mysimplebank.infrastructure.web.controller.moneytrans
 import com.github.kai9026.mysimplebank.application.usecase.transfermoney.TransferMoneyUseCase;
 import com.github.kai9026.mysimplebank.infrastructure.web.controller.moneytransfer.model.MoneyTransferApiRequest;
 import com.github.kai9026.mysimplebank.infrastructure.web.mapper.moneytransfer.MoneyTransferApiMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/moneytransfer")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "MoneyTransfer", description = "Transfer money between accounts")
 public class MoneyTransferRestController {
 
   private final TransferMoneyUseCase transferMoneyUseCase;

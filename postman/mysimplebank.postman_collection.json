@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "6a63fa95-9b26-4539-8ea1-d3cf7148ed07",
+		"name": "My simple bank - Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"customerCode\", jsonData.customerCode);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": {\n        \"firstName\": \"Arkaitz\",\n        \"lastName\": \"Lazaro Lata\"\n    },\n    \"address\": {\n        \"street\": \"Caridad, 16\",\n        \"city\": \"Ciudad Rodrigo\",\n        \"postalCode\": 37500\n    },\n    \"email\": \"kai90@mail.com\",\n    \"birthDate\": \"1990-07-02\",\n    \"password\": \"Dt8com$2208\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customer",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create bank account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"bankAccountCode\", jsonData.bankAccountCode);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"alias\": \"Saving account\",\n    \"currency\": \"EUR\",\n    \"customerCode\": \"{{customerCode}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/bankaccount",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"bankaccount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deposit into account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"depositAmount\": \"20.00\",\n    \"currency\": \"EUR\",\n    \"description\": \"Deposit August 2022\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/bankaccount/{{bankAccountCode}}/deposit",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"bankaccount",
+						"{{bankAccountCode}}",
+						"deposit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer between accounts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"sourceAccount\": \"{{sourceAccount}}}}\",\n    \"targetAccount\": \"{{targetAccount}}\",\n    \"transferAmount\": 5.00,\n    \"transferCurrency\": \"EUR\",\n    \"transferConcept\": \"TV\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/moneytransfer/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"moneytransfer",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Account detail",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/bankaccount/{{detailAccountCode}}?from=2022-08-01&to=2022-09-01",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"bankaccount",
+						"{{detailAccountCode}}"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2022-08-01"
+						},
+						{
+							"key": "to",
+							"value": "2022-09-01"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "customerCode",
+			"value": ""
+		},
+		{
+			"key": "bankAccountCode",
+			"value": ""
+		}
+	]
+}
